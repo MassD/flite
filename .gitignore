@@ -1,0 +1,16 @@
+*.annot
+*.cma
+*.cmi
+*.a
+*.o
+*.cmxs
+*.cmxa
+*.ml~
+*.ml#
+*.mli~
+*.mli#
+*.native
+*.byte
+*.md~
+.DS_Store
+.#mongo.mli
