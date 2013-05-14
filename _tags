@@ -1,1 +1,2 @@
-<**/src/*>: package(unix), package(netclient), package(mongo)
+<**/src/*>: package(unix), package(netclient), package(mongo), package(xml-light)
+<**/test/*>: package(unix), package(netclient), package(mongo), package(xml-light)

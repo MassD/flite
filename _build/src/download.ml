@@ -2,18 +2,12 @@ open Http_client.Convenience;;
 
 type airport = 
     {
-      country : string;
       name : string;
-      code : string;
+      country : string;
+      code : string
     }
 
-module AirportSet = 
-  Set.Make(
-    struct 
-      type t = airport;; 
-      let compare = compare 
-    end
-  );;
+module AirportSet = Set.Make(struct type t = airport let compare = compare end);;
 
 let create_url c = 
   let buf = Buffer.create 256 in
@@ -30,8 +24,8 @@ let parsing_airport n c =
   (*Printf.printf "name = %S\n" name;*)
   let country = String.sub n ((String.length n)-2) 2 in
   {
-    country = country;
     name = String.capitalize (String.lowercase name);
+    country = country;
     code = c
   };;
 
@@ -53,31 +47,19 @@ let add_airport set html =
 let char_inc c = Char.chr ((Char.code c)+1);;
 let end_c = 'z';;
 
-let get_all () =
-  let rec get c acc =
+let get_all_airports () =
+  let rec get_all c acc =
     if c > end_c then acc
     else begin
       (*Printf.printf "Dealing with %c\n" c;*)
-      get (char_inc c) (add_airport acc (download_url (create_url c)))
+      get_all (char_inc c) (add_airport acc (download_url (create_url c)))
     end 
   in 
-  get 'a' AirportSet.empty;;
+  get_all 'a' AirportSet.empty;;
 
-let to_bson ap = 
-  let country_e = Bson.create_string ap.country in
-  let name_e = Bson.create_string ap.name in
-  let code_e = Bson.create_string ap.code in
-  Bson.add_element "code" code_e 
-    (Bson.add_element "name" name_e 
-       (Bson.add_element "country" country_e Bson.empty));;
+let all_set = get_all_airports();;
 
-let of_bson bs = 
-  let country = Bson.get_string (Bson.get_element "country" bs) in 
-  let name = Bson.get_string (Bson.get_element "name" bs) in
-  let code = Bson.get_string (Bson.get_element "country" bs) in
-  {
-    country = country;
-    name = name;
-    code = code
-  };;
+let _ = 
+  AirportSet.iter (fun a -> Printf.printf "name = %S, country = %S, code = %S\n" a.name a.country a.code) all_set;
+  Printf.printf "Totally %d airports\n" (AirportSet.cardinal all_set);;
       
