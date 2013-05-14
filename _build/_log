@@ -1,0 +1,10 @@
+### Starting build.
+# Target: src/download.ml.depends, tags: { extension:ml, file:src/download.ml, ocaml, ocamldep, package(mongo), package(netclient), package(unix), quiet, traverse }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamldep -package unix -package netclient -package mongo -modules src/download.ml > src/download.ml.depends
+# Target: src/download.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/download.cmo, file:src/download.ml, implem, ocaml, package(mongo), package(netclient), package(unix), quiet, traverse }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlc -c -package unix -package netclient -package mongo -I src -o src/download.cmo src/download.ml
+# Target: src/download.cmx, tags: { compile, extension:cmx, extension:ml, file:src/download.cmx, file:src/download.ml, implem, native, ocaml, package(mongo), package(netclient), package(unix), quiet, traverse }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlopt -c -package unix -package netclient -package mongo -I src -o src/download.cmx src/download.ml
+# Target: src/download.native, tags: { dont_link_with, extension:native, file:src/download.native, link, native, ocaml, package(mongo), package(netclient), package(unix), program, quiet, traverse }
+/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlopt xml-light.cmxa -linkpkg -package unix -package netclient -package mongo src/download.cmx -o src/download.native
+# Compilation successful.

@@ -1,2 +1,1 @@
-<**/src/*>: package(unix)
-<**/test/*>: package(unix)
+<**/src/*>: package(unix), package(netclient), package(mongo)
