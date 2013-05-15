@@ -1,2 +1,2 @@
-<**/src/*>: package(unix), package(netclient), package(mongo), package(xml-light)
-<**/test/*>: package(unix), package(netclient), package(mongo), package(xml-light)
+<**/src/*>: package(async_core),package(unix), package(netclient), package(mongo), package(xml-light) ,thread
+<**/test/*>: package(async_core),package(unix), package(netclient), package(mongo), package(xml-light), thread

@@ -51,17 +51,18 @@ let add_airport set html =
   new_set;;
 
 let char_inc c = Char.chr ((Char.code c)+1);;
-let end_c = 'z';;
 
-let get_all () =
+let get_between c1 c2 =
   let rec get c acc =
-    if c > end_c then acc
+    if c > c2 then acc
     else begin
       (*Printf.printf "Dealing with %c\n" c;*)
       get (char_inc c) (add_airport acc (download_url (create_url c)))
     end 
   in 
-  get 'a' AirportSet.empty;;
+  get c1 AirportSet.empty;;
+
+let get_all () = get_between 'a' 'z'
 
 let to_bson ap = 
   let country_e = Bson.create_string ap.country in
