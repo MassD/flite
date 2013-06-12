@@ -21,8 +21,6 @@ let create_url c =
   Buffer.add_char buf c;
   Buffer.contents buf;;
 
-let download_url = http_get;;
-
 let parsing_airport n c = 
   (*Printf.printf "parsing %S, %S\n" n c;*)
   let name_end = (String.index n '(') in
@@ -50,19 +48,17 @@ let add_airport set html =
   in 
   new_set;;
 
-let char_inc c = Char.chr ((Char.code c)+1);;
-
-let get_between c1 c2 =
-  let rec get c acc =
-    if c > c2 then acc
-    else begin
-      (*Printf.printf "Dealing with %c\n" c;*)
-      get (char_inc c) (add_airport acc (download_url (create_url c)))
-    end 
+let get_all () = 
+  let char_inc c = Char.chr ((Char.code c)+1)
   in 
-  get c1 AirportSet.empty;;
-
-let get_all () = get_between 'a' 'z'
+  let get_between c1 c2 =
+    let rec get c acc =
+      if c > c2 then acc
+      else get (char_inc c) (add_airport acc (http_get (create_url c)))
+    in 
+    get c1 AirportSet.empty 
+  in 
+  get_between 'a' 'z';;
 
 let to_bson ap = 
   let country_e = Bson.create_string ap.country in
