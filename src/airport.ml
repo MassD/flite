@@ -1,11 +1,13 @@
 open Http_client.Convenience;;
 
-type airport = 
+type t = 
     {
       country : string;
       name : string;
       code : string;
     }
+
+type airport = t;;
 
 module AirportSet = 
   Set.Make(

@@ -1,12 +1,12 @@
 open Http_client.Convenience;;
+open Flight;;
 
-type flight =
+type fs_result =
     { 
+      flight: Flight.t;
       airline : string;
-      dep_ap : string;
-      arr_ap : string;
-      dep_date : string;
-      ret_date : string;
+      actual_dep_date : string;
+      actual_ret_date : string;
       price : float;
     }
 
@@ -25,15 +25,15 @@ let value_end = "\"";;
 let fs_url_base = 
   "http://www.lastminute.com/trips/flightlist/flexiCal?srchSnr=0&showFlexiCal=True&flexDate=True&srchAdt=1&path=flights&airline=NONE&pTxId=1887981&numLegs=2&srchChld=0&configId=S72722479&intcmp=tsm&redirectOnly=false&source=&cabins=X&srchInf=0";;
 
-let fs_flex dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy = 
+let fs_flex f = 
   let fs_url = 
     fs_url_base 
-    ^ "&depAp=" ^ dep_ap
-    ^ "&arrAp=" ^ arr_ap
-    ^ "&depMo=" ^ dep_mo
-    ^ "&depDy=" ^ dep_dy
-    ^ "&retMo=" ^ ret_mo
-    ^ "&retDy=" ^ ret_dy 
+    ^ "&depAp=" ^ f.dep_ap
+    ^ "&arrAp=" ^ f.arr_ap
+    ^ "&depMo=" ^ f.dep_mo
+    ^ "&depDy=" ^ f.dep_dy
+    ^ "&retMo=" ^ f.ret_mo
+    ^ "&retDy=" ^ f.ret_dy 
   in 
   let html_str = http_get fs_url
   in 
@@ -56,17 +56,16 @@ let fs_flex dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy =
 	    let (dep_mo, next) = extract next dep_mo_begin value_end in
 	    let (ret_dy, next) = extract next ret_dy_begin value_end in
 	    let (ret_mo, next) = extract next ret_mo_begin value_end in
-	    let f = 
+	    let fr = 
 	      { 
+		flight = f;
 		airline = String.capitalize airline;
-		dep_ap = dep_ap;
-		arr_ap = arr_ap;
-		dep_date = dep_mo ^ "-" ^ dep_dy;
-		ret_date = ret_mo ^ "-" ^ ret_dy;
+		actual_dep_date = dep_mo ^ "-" ^ dep_dy;
+		actual_ret_date = ret_mo ^ "-" ^ ret_dy;
 		price = float_of_string price;
 	      } in
-	    Printf.printf "%s, %s, %s, %s, %s, %f \n" f.airline f.dep_ap f.arr_ap f.dep_date f.ret_date f.price;
-	    parse_rec (next+1) (f::acc)
+	    (*Printf.printf "%s, %s, %s, %s, %s, %f \n" fr.airline f.dep_ap f.arr_ap fr.actual_dep_date fr.actual_ret_date fr.price;*)
+	    parse_rec (next+1) (fr::acc)
 	) with Not_found -> acc
       end 
     in 
