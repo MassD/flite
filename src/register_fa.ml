@@ -4,8 +4,14 @@ open Flight
 (* A very basic command-line program, using Command, Core's Command line
    parsing library.  *)
 
+let register_fa_mongo f =
+  let mongo = Mongo.create_local_default "flite" "flights" in
+  
+let bson = to_bson f in
+  
+
 let register dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy email frequency desired_airline () =
-  let f = 
+  let fa = 
     { 
     dep_ap = dep_ap;
     arr_ap = arr_ap;
@@ -22,6 +28,8 @@ let register dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy email frequency desired_a
   }
   in 
   print_endline (to_string f);;
+
+
 
 let command =
   (* [Command.basic] is used for creating a command.  Every command takes a text
