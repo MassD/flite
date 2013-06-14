@@ -6,9 +6,11 @@ module Flight : sig
       
       dep_mo : string;
       dep_dy : string;
+      dep_utime : float;
       
       ret_mo : string;
       ret_dy : string;
+      ret_utime : float;
       
       desired_airline : string;
       id : int;
@@ -26,9 +28,11 @@ struct
       
       dep_mo : string;
       dep_dy : string;
+      dep_utime : float;
       
       ret_mo : string;
       ret_dy : string;
+      ret_utime : float;
       
       desired_airline : string;
       id : int;
@@ -39,26 +43,32 @@ struct
     let arr_ap = Bson.create_string f.arr_ap in
     let dep_mo = Bson.create_string f.dep_mo in
     let dep_dy = Bson.create_string f.dep_dy in
+    let dep_utime = Bson.create_double f.dep_utime in
     let ret_mo = Bson.create_string f.ret_mo in
     let ret_dy = Bson.create_string f.ret_dy in
+    let ret_utime = Bson.create_double f.ret_utime in
     let desired_airline = Bson.create_string f.desired_airline in
     let id = Bson.create_int32 (Int32.of_int f.id) in
     Bson.add_element "dep_ap" dep_ap 
       (Bson.add_element "arr_ap" arr_ap 
 	 (Bson.add_element "dep_mo" dep_mo
 	    (Bson.add_element "dep_dy" dep_dy
-	       (Bson.add_element "ret_mo" ret_mo
-		  (Bson.add_element "ret_dy" ret_dy
-		     (Bson.add_element "desired_airline" desired_airline
-			(Bson.add_element "id" id Bson.empty)))))))
+	       (Bson.add_element "dep_utime" dep_utime
+		  (Bson.add_element "ret_mo" ret_mo
+		     (Bson.add_element "ret_dy" ret_dy
+			(Bson.add_element "ret_utime" ret_utime
+			   (Bson.add_element "desired_airline" desired_airline
+			      (Bson.add_element "id" id Bson.empty)))))))))
 
   let of_bson bs = 
     let dep_ap = Bson.get_string (Bson.get_element "dep_ap" bs) in 
     let arr_ap = Bson.get_string (Bson.get_element "arr_ap" bs) in
     let dep_mo = Bson.get_string (Bson.get_element "dep_mo" bs) in 
     let dep_dy = Bson.get_string (Bson.get_element "dep_dy" bs) in
+    let dep_utime = Bson.get_double (Bson.get_element "dep_utime" bs) in
     let ret_mo = Bson.get_string (Bson.get_element "ret_mo" bs) in 
     let ret_dy = Bson.get_string (Bson.get_element "ret_dy" bs) in
+    let ret_utime = Bson.get_double (Bson.get_element "ret_utime" bs) in
     let desired_airline = Bson.get_string (Bson.get_element "desired_airline" bs) in
     let id = Bson.get_int32 (Bson.get_element "id" bs) in
     { 
@@ -67,9 +77,11 @@ struct
 
       dep_mo = dep_mo;
       dep_dy = dep_dy;
+      dep_utime = dep_utime;
 
       ret_mo = ret_mo;
       ret_dy = ret_dy;
+      ret_utime = ret_utime;
       
       desired_airline = desired_airline;
 
@@ -81,8 +93,10 @@ struct
     ^ f.arr_ap ^ ", "
     ^ f.dep_mo ^ "-"
     ^ f.dep_dy ^ ", "
+    ^ string_of_float f.dep_utime ^ ", "
     ^ f.ret_mo ^ "-"
     ^ f.ret_dy ^ ", "
+    ^ string_of_float f.ret_utime ^ ", "
     ^ f.desired_airline ^ ", "
     ^ "id = " ^ string_of_int f.id ^ "\n"
 end

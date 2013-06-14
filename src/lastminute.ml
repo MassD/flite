@@ -28,6 +28,7 @@ let fs_flex f =
     ^ "&retMo=" ^ f.ret_mo
     ^ "&retDy=" ^ f.ret_dy 
   in 
+  print_endline fs_url;
   let html_str = http_get fs_url
   in 
   let parse html = 

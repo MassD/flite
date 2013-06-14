@@ -1,4 +1,4 @@
-open Flight;;
+open Flite.Flight;;
 
 let f = 
   { 
@@ -7,15 +7,17 @@ let f =
 
     dep_mo = "2013-9";
     dep_dy = "20";
+    dep_utime = Utils.to_utime ("2013-9"^"-"^"20");
 
     ret_mo = "2013-10";
     ret_dy = "13";
-
+    ret_utime = Utils.to_utime ("2013-10"^"-"^"13");
+    
     desired_airline = "";
-    flight_id = 0l;
+    id = 0;
   }
 
 (*let f1 = Flight.create "LON" "PEK" "2013-9" "20" "2013-10" "13" 6.0 None;;*)
 
-let fr_list = Lastminute_fs.fs_flex f;;
+let fr_list = Lastminute.fs_flex f;;
 let _ = print_int (List.length fr_list); print_endline "";;

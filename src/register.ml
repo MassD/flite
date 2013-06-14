@@ -37,9 +37,11 @@ let register dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy desired_airline user emai
 
     dep_mo = dep_mo;
     dep_dy = dep_dy;
+    dep_utime = Utils.to_utime (dep_mo^"-"^dep_dy);
 
     ret_mo = ret_mo;
     ret_dy = ret_dy;
+    ret_utime = Utils.to_utime (ret_mo^"-"^ret_dy);
     
     desired_airline = desired_airline;
 
