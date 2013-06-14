@@ -1,6 +1,6 @@
 open Http_client.Convenience;;
-open Flight;;
-open Price;;
+open Flite.Flight;;
+open Flite.Price;;
 
 
 let airline_begin = "<p class=\"flexi-airline\">";;

@@ -1,6 +1,4 @@
-module type Flight = 
-struct
-  
+module Flight : sig
   type t =
     { 
       dep_ap : string;
@@ -13,7 +11,27 @@ struct
       ret_dy : string;
       
       desired_airline : string;
-      flight_id : int;
+      id : int;
+    }
+
+  val to_bson : t -> Bson.t
+  val of_bson : Bson.t -> t
+  val to_string : t -> string
+end = 
+struct
+  type t =
+    { 
+      dep_ap : string;
+      arr_ap : string;
+      
+      dep_mo : string;
+      dep_dy : string;
+      
+      ret_mo : string;
+      ret_dy : string;
+      
+      desired_airline : string;
+      id : int;
     } 
 
   let to_bson f = 
@@ -24,7 +42,7 @@ struct
     let ret_mo = Bson.create_string f.ret_mo in
     let ret_dy = Bson.create_string f.ret_dy in
     let desired_airline = Bson.create_string f.desired_airline in
-    let flight_id = Bson.create_int32 (Int32.of_int f.flight_id) in
+    let id = Bson.create_int32 (Int32.of_int f.id) in
     Bson.add_element "dep_ap" dep_ap 
       (Bson.add_element "arr_ap" arr_ap 
 	 (Bson.add_element "dep_mo" dep_mo
@@ -32,7 +50,7 @@ struct
 	       (Bson.add_element "ret_mo" ret_mo
 		  (Bson.add_element "ret_dy" ret_dy
 		     (Bson.add_element "desired_airline" desired_airline
-			(Bson.add_element "flight_id" flight_id Bson.empty)))))));;
+			(Bson.add_element "id" id Bson.empty)))))))
 
   let of_bson bs = 
     let dep_ap = Bson.get_string (Bson.get_element "dep_ap" bs) in 
@@ -42,7 +60,7 @@ struct
     let ret_mo = Bson.get_string (Bson.get_element "ret_mo" bs) in 
     let ret_dy = Bson.get_string (Bson.get_element "ret_dy" bs) in
     let desired_airline = Bson.get_string (Bson.get_element "desired_airline" bs) in
-    let flight_id = Bson.get_int32 (Bson.get_element "flight_id" bs) in
+    let id = Bson.get_int32 (Bson.get_element "id" bs) in
     { 
       dep_ap = dep_ap;
       arr_ap = arr_ap;
@@ -55,8 +73,8 @@ struct
       
       desired_airline = desired_airline;
 
-      flight_id = Int32.to_int flight_id;    
-    };;
+      id = Int32.to_int id;    
+    }
 
   let to_string f = 
     f.dep_ap ^ ", "
@@ -66,13 +84,23 @@ struct
     ^ f.ret_mo ^ "-"
     ^ f.ret_dy ^ ", "
     ^ f.desired_airline ^ ", "
-    ^ string_of_int f.flight_id ^ "\n";;
-
+    ^ "id = " ^ string_of_int f.id ^ "\n"
 end
 
-module type Alert = 
+module Alert : sig
+  type t =
+      {
+	flight_id : int;
+	user : string;
+	email : string;
+	frequency : float; (* in hour *)
+      }
+
+  val to_bson : t -> Bson.t
+  val of_bson : Bson.t -> t
+  val to_string : t -> string
+end = 
 struct
-  
   type t =
       {
 	flight_id : int;
@@ -89,7 +117,7 @@ struct
     (Bson.add_element "flight_id" flight_id
        (Bson.add_element "user" user
 	  (Bson.add_element "email" email
-	     (Bson.add_element "frequency" frequency Bson.empty))));;
+	     (Bson.add_element "frequency" frequency Bson.empty))))
 
   let of_bson bs = 
     let flight_id = Bson.get_int32 (Bson.get_element "flight_id" bs) in 
@@ -101,20 +129,31 @@ struct
       user = user;
       email = email;
       frequency = frequency;
-    };;
+    }
 
   let to_string a = 
-    string_of_int a.flight_id ^ ", "
+    "flight_id = " ^ string_of_int a.flight_id ^ ", "
     ^ a.user ^ ", "
-    ^ a.email ^ "-"
-    ^ (string_of_float a.frequency)  ^ "\n";;
-
+    ^ a.email ^ ", "
+    ^ (string_of_float a.frequency)  ^ "\n"
 end
 
-module type Price = 
-struct
-  open Flight;;
+module Price : sig
+  type t =
+      {
+        flight: Flight.t;
+	airline : string;
+	actual_dep_date : string;
+	actual_ret_date : string;
+	price : float;
+	last_checked : float;
+      }
 
+  val to_bson : t -> Bson.t
+  val of_bson : Bson.t -> t
+  val to_string : t -> string
+end =  
+struct
   type t =
       { 
 	flight: Flight.t;
@@ -137,7 +176,7 @@ struct
 	 (Bson.add_element "actual_dep_date" actual_dep_date
 	    (Bson.add_element "actual_ret_date" actual_ret_date
 	       (Bson.add_element "price" price
-		  (Bson.add_element "last_checked" last_checked Bson.empty)))));;
+		  (Bson.add_element "last_checked" last_checked Bson.empty)))))
 
   let of_bson bs = 
     let flight = Flight.of_bson (Bson.get_doc_element (Bson.get_element "flight" bs)) in 
@@ -153,7 +192,7 @@ struct
       actual_ret_date = actual_ret_date;
       price = price;
       last_checked = last_checked;
-    };;
+    }
 
   let to_string p = 
     (Flight.to_string p.flight) ^ "; "
@@ -161,6 +200,5 @@ struct
     ^ p.actual_dep_date ^ "-"
     ^ p.actual_ret_date ^ ", "
     ^ string_of_float p.price ^ "-"
-    ^ Utils.string_of_utime p.last_checked ^ "\n";;
-
+    ^ Utils.string_of_utime p.last_checked ^ "\n"
 end

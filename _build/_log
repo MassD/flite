@@ -1,8 +1,0 @@
-### Starting build.
-# Target: src/flight.ml.depends, tags: { extension:ml, file:src/flight.ml, ocaml, ocamldep, package(async_core), package(core), package(mongo), package(netclient), package(str), package(unix), package(xml-light), quiet, thread, traverse }
-/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamldep -package async_core -package unix -package str -package netclient -package mongo -package xml-light -package core -modules src/flight.ml > src/flight.ml.depends
-# Target: src/flight.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:src/flight.cmo, file:src/flight.ml, implem, ocaml, package(async_core), package(core), package(mongo), package(netclient), package(str), package(unix), package(xml-light), quiet, thread, traverse }
-/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlc -c -thread -package async_core -package unix -package str -package netclient -package mongo -package xml-light -package core -I src -o src/flight.cmo src/flight.ml
-# Target: src/flight.byte, tags: { byte, dont_link_with, extension:byte, file:src/flight.byte, link, ocaml, package(async_core), package(core), package(mongo), package(netclient), package(str), package(unix), package(xml-light), program, quiet, thread, traverse }
-/home/xinuo/.opam/4.00.1/bin/ocamlfind ocamlc -linkpkg -thread -package async_core -package unix -package str -package netclient -package mongo -package xml-light -package core src/flight.cmo -o src/flight.byte
-# Compilation successful.
