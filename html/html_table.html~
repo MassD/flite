@@ -1,0 +1,36 @@
+<table style="font-family: 'Lucida Sans Unicode', 'Lucida Grande', Sans-Serif;font-size: 12px;margin: 45px;width: 480px;text-align: left;border-collapse: collapse;" summary="Newest price info">
+  <thead>
+    <tr>
+      <th scope="col" style="font-size: 13px;font-weight: normal;padding: 8px;background: #b9c9fe;border-top: 4px solid #aabcfe;border-bottom: 1px solid #fff;color: #039;">Employee</th>
+      <th scope="col" style="font-size: 13px;font-weight: normal;padding: 8px;background: #b9c9fe;border-top: 4px solid #aabcfe;border-bottom: 1px solid #fff;color: #039;">Salary</th>
+      <th scope="col" style="font-size: 13px;font-weight: normal;padding: 8px;background: #b9c9fe;border-top: 4px solid #aabcfe;border-bottom: 1px solid #fff;color: #039;">Bonus</th>
+      <th scope="col" style="font-size: 13px;font-weight: normal;padding: 8px;background: #b9c9fe;border-top: 4px solid #aabcfe;border-bottom: 1px solid #fff;color: #039;">Supervisor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Stephen C. Cox</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$300</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$50</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Bob</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Josephin Tan</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$150</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">-</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Annie</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Joyce Ming</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$200</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$35</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Andy</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">James A. Pentel</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$175</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">$25</td>
+      <td style="padding: 8px;background: #e8edff; border-bottom: 1px solid #fff;color: #669;border-top: 1px solid transparent;">Annie</td>
+    </tr>
+  </tbody>
+</table>
