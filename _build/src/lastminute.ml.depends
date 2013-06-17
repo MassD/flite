@@ -1,1 +1,1 @@
-src/lastminute.ml: Cohttp_lwt_body Cohttp_lwt_unix Flite Http_client Lwt Printf Str String Unix Uri
+src/lastminute.ml: Flite Http_client Lwt Ocsigen_http_client Ocsigen_http_frame Ocsigen_stream Printf Str String Unix

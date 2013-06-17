@@ -2,7 +2,6 @@ open Http_client.Convenience;;
 open Flite.Flight;;
 open Flite.Price;;
 open Lwt;;
-open Cohttp_lwt_unix;;
 
 
 let airline_begin = "<p class=\"flexi-airline\">";;
@@ -63,12 +62,13 @@ let parse f html =
 let fs_flex f = parse f (get_fs_html f)
 
 let content = function
-  | Some (_, body) -> Cohttp_lwt_body.string_of_body body
+  | { Ocsigen_http_frame.frame_content = Some v } ->
+      Ocsigen_stream.string_of_stream 1073741823 (Ocsigen_stream.get v)
   | _ -> return ""
 
 let download_fs_html_lwt f = 
   print_endline ("download begin " ^ (build_fs_url f));
-  Cohttp_lwt_unix.Client.get (Uri.of_string (build_fs_url f))
+   Ocsigen_http_client.get_url (build_fs_url f)
 
 let get_fs_html_lwt f =
   (download_fs_html_lwt f) >>= (fun response_body -> print_endline "finished download fs";content response_body)

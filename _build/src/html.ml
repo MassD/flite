@@ -34,5 +34,5 @@ let format_pl pl =
     let tr_content = airline^dep_date^ret_date^price^last_checked in
     price_tr tr_content
   in
-  price_tbody (price_tbody (List.fold_left (fun r p -> r ^ (format_p p)) "" pl))
+  price_table (price_tbody (List.fold_left (fun r p -> r ^ (format_p p)) "" pl))
     

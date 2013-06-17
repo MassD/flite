@@ -40,32 +40,37 @@ let check_existing_price_lwt f =
   let mongo = Mongo.create_local_default "flite" "prices" in
   let q = q_price f in
   let r = Mongo.find_q mongo q in
-  print_endline "checked existing_price";
+  (*print_endline "checked existing_price";*)
   Lwt.return (f, r, (MongoReply.get_num_returned r))
 
 let get_existing_price_lwt r =
   Lwt.return (Html.format_pl (List.map Flite.Price.of_bson (MongoReply.get_document_list r)))
 
 let get_fs_price_lwt f =
-  print_endline "begin fs";
-  (Lastminute.fs_lwt f) >>= (fun pl -> print_endline "lastminute finished"; List.iter (fun p -> print_endline p.airline) pl;price_to_mongo pl; Lwt.return (Html.format_pl pl))
+  (*print_endline "begin fs";*)
+  (Lastminute.fs_lwt f) >>= 
+    (fun pl -> 
+      print_endline "lastminute finished"; 
+      price_to_mongo pl; 
+      Lwt.return (Html.format_pl pl))
 
 let get_price_html_lwt f =
-  print_endline "begin get_price_html_lwt";
+  (*print_endline "begin get_price_html_lwt";*)
   (check_existing_price_lwt f) >>= 
     (fun (f, r, n) -> if n > 0l then (get_existing_price_lwt r) else (get_fs_price_lwt f))
 
 let print_price_html_lwt f =
     (get_price_html_lwt f) >>=
-      (fun ph -> Lwt_io.printf "%s\n" ph)
+      (fun ph -> Lwt_io.printf "%d\n" (String.length ph))
 
 let rec start () = 
-  (Lwt_unix.sleep 1.)  >>= 
-    (fun () -> print_endline "begin fs all";let fl = get_all_flights () in Printf.printf "get %d flights\n" (List.length fl);Lwt_list.iter_p print_price_html_lwt fl(*start ()*))
+  (Lwt_unix.sleep 100.)  >>= 
+    (fun () -> 
+      print_endline "begin fs all";
+      let fl = get_all_flights () in 
+      Printf.printf "get %d flights\n" (List.length fl);
+      (Lwt_list.iter_p print_price_html_lwt fl) >>= start )
 
-(*let rec start () = Lwt.bind (Lwt_unix.sleep 1.) (fun () -> print_endline "Hello, world !"; start ()) *)
-
-(*let _ = let fl = get_all_flights () in Printf.printf "get %d flights" (List.length fl)*)
 let _ = Lwt_main.run (start()) 
 
 
