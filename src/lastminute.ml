@@ -71,7 +71,7 @@ let download_fs_html_lwt f =
   Cohttp_lwt_unix.Client.get (Uri.of_string (build_fs_url f))
 
 let get_fs_html_lwt f =
-  (download_fs_html_lwt f) >>= (fun response_body -> print_endline "finished download fs";Lwt.return (content response_body))
+  (download_fs_html_lwt f) >>= (fun response_body -> print_endline "finished download fs";content response_body)
 
 let fs_lwt f =
   (get_fs_html_lwt f) >>= (fun html -> Lwt.return (parse f html))

@@ -1,4 +1,5 @@
 open Flite.Flight
+open Flite.Price
 open Lwt
 
 let q_all_flights () = 
@@ -47,7 +48,7 @@ let get_existing_price_lwt r =
 
 let get_fs_price_lwt f =
   print_endline "begin fs";
-  (Lastminute.fs_lwt f) >>= (fun pl -> print_endline "lastminute finished"; price_to_mongo pl; Lwt.return (Html.format_pl pl))
+  (Lastminute.fs_lwt f) >>= (fun pl -> print_endline "lastminute finished"; List.iter (fun p -> print_endline p.airline) pl;price_to_mongo pl; Lwt.return (Html.format_pl pl))
 
 let get_price_html_lwt f =
   print_endline "begin get_price_html_lwt";
@@ -55,17 +56,12 @@ let get_price_html_lwt f =
     (fun (f, r, n) -> if n > 0l then (get_existing_price_lwt r) else (get_fs_price_lwt f))
 
 let print_price_html_lwt f =
-  let print () =
-    print_endline "begin print";
     (get_price_html_lwt f) >>=
       (fun ph -> Lwt_io.printf "%s\n" ph)
-  in 
-  print_endline "begin print_price_html_lwt";
-  Lwt.async print
 
 let rec start () = 
   (Lwt_unix.sleep 1.)  >>= 
-    (fun () -> print_endline "begin fs all";let fl = get_all_flights () in Printf.printf "get %d flights\n" (List.length fl);List.iter print_price_html_lwt fl; Lwt.return_unit(*start ()*))
+    (fun () -> print_endline "begin fs all";let fl = get_all_flights () in Printf.printf "get %d flights\n" (List.length fl);Lwt_list.iter_p print_price_html_lwt fl(*start ()*))
 
 (*let rec start () = Lwt.bind (Lwt_unix.sleep 1.) (fun () -> print_endline "Hello, world !"; start ()) *)
 
