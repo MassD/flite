@@ -1,4 +1,4 @@
-open Core.Std
+(*open Core.Std*)
 open Flite.Flight
 open Flite.Alert
 
@@ -62,7 +62,9 @@ let register dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy desired_airline user emai
       flight_id = f.id;
       user = user;
       email = email;
-      frequency = frequency;
+      frequency = 
+	let splits = Str.split (Str.regexp_string "::") frequency in
+	List.map int_of_string splits;
     }
   in 
   print_endline (Flite.Flight.to_string f);
@@ -76,11 +78,11 @@ let register dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy desired_airline user emai
 let command =
   (* [Command.basic] is used for creating a command.  Every command takes a text
      summary and a command line spec *)
-  Command.basic
+  Core.Std.Command.basic
     ~summary:"Register a flight alert"
     (* Command line specs are built up component by component, using a small
        combinator library whose operators are contained in [Command.Spec] *)
-    Command.Spec.(
+    Core.Std.Command.Spec.(
       empty
       +> flag "-dep-ap" (required string) 
         ~doc:" The departure airport code"
@@ -100,12 +102,12 @@ let command =
         ~doc:" The username for the alert, e.g., 'xinuo'"
       +> flag "-email" (required string) 
         ~doc:" The email to receive the alert, e.g., 'iamindcs@gmail.com;jennyindcs@gmail.com'"
-      +> flag "-frequency" (required float) 
-        ~doc:" The checking frequency, in hour, e.g., 4.5"
+      +> flag "-frequency" (required string) 
+        ~doc:" The list of clock hours at which prices needed to be sent, e.g., 12::14::23"
       
     )
     (* The command-line spec determines the argument to this function, which
        show up in an order that matches the spec. *)
     register
 
-let () = Command.run command
+let () = Core.Std.Command.run command

@@ -107,7 +107,7 @@ module Alert : sig
 	flight_id : int;
 	user : string;
 	email : string;
-	frequency : float; (* in hour *)
+	frequency : int list; (* list of hour, e.g., [12;13;24] *)
       }
 
   val to_bson : t -> Bson.t
@@ -120,14 +120,15 @@ struct
 	flight_id : int;
 	user : string;
 	email : string;
-	frequency : float; (* in hour *)
+        frequency : int list;
       }
 
   let to_bson a = 
     let flight_id = Bson.create_int32 (Int32.of_int a.flight_id) in
     let user = Bson.create_string a.user in
     let email = Bson.create_string a.email in
-    let frequency = Bson.create_double a.frequency in
+    let frequency = Bson.create_list (List.map (fun fre -> Bson.create_int32 (Int32.of_int fre)) a.frequency) in 
+    (*let frequency = Bson.create_double a.frequency in*)
     (Bson.add_element "flight_id" flight_id
        (Bson.add_element "user" user
 	  (Bson.add_element "email" email
@@ -137,7 +138,8 @@ struct
     let flight_id = Bson.get_int32 (Bson.get_element "flight_id" bs) in 
     let user = Bson.get_string (Bson.get_element "user" bs) in
     let email = Bson.get_string (Bson.get_element "email" bs) in
-    let frequency = Bson.get_double (Bson.get_element "frequency" bs) in 
+    let frequency = let el = Bson.get_list (Bson.get_element "frequency" bs) in List.map (fun e -> Int32.to_int (Bson.get_int32 e)) el in
+    (*let frequency = Bson.get_double (Bson.get_element "frequency" bs) in*)
     { 
       flight_id = Int32.to_int flight_id;
       user = user;
@@ -148,8 +150,8 @@ struct
   let to_string a = 
     "flight_id = " ^ string_of_int a.flight_id ^ ", "
     ^ a.user ^ ", "
-    ^ a.email ^ ", "
-    ^ (string_of_float a.frequency)  ^ "\n"
+    ^ a.email (*^ ", "
+    ^ (string_of_float a.frequency)  *)^ "\n"
 end
 
 module Price : sig

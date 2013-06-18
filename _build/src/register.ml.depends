@@ -1,1 +1,1 @@
-src/register.ml: Bson Command Core Flite Hashtbl Mongo MongoReply Utils
+src/register.ml: Bson Core Flite Hashtbl List Mongo MongoReply Str Utils
