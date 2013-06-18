@@ -1,1 +1,1 @@
-src/email.ml: Lwt Netmime Netsendmail Printf
+src/email.ml: Lwt Lwt_io Netmime Netsendmail

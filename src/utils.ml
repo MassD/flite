@@ -2,11 +2,7 @@ open Unix;;
 
 let to_int32 = Int32.of_int;;
 
-let string_of_utime time = 
-  let gtime = Unix.gmtime time in
-  (string_of_int (gtime.tm_year)) ^ "-"
-  ^ (string_of_int (gtime.tm_mon)) ^ "-"
-  ^ (string_of_int (gtime.tm_mday));;
+
 
 let to_utime s = 
   let sp_list = Str.split (Str.regexp_string "-") s in
@@ -28,9 +24,9 @@ let to_utime s =
   in 
   utime;;
 
-let string_of_utime ut =
-  let t = Unix.gmtime ut in
-  Printf.sprintf "%d-%d-%d %d:%d" t.tm_year t.tm_mon t.tm_mday t.tm_hour t.tm_min;; 
+let string_of_utime time = 
+  let gtime = Unix.gmtime time in
+  Printf.sprintf "%d-%d-%d %d:%d:%d" (gtime.tm_year+1900) (gtime.tm_mon+1) (gtime.tm_mday) (gtime.tm_hour+1) gtime.tm_min gtime.tm_sec
 
 let current_hour () = let ut = Unix.gmtime (Unix.time ()) in ut.tm_hour
 

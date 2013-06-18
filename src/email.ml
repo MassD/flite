@@ -20,5 +20,5 @@ let send (user,user_email,subj,html) =
 let send_lwt (user,user_email,subj,html) = 
   print_endline "sending email"; 
   send (user,user_email,subj,html); 
-  Printf.printf "email sent to %s\n" user_email;
-  Lwt.return_unit
+  Lwt_io.printf "email sent to %s\n" user_email;
+

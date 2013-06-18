@@ -30,7 +30,7 @@ let format_pl pl =
     let dep_date = price_td p.actual_dep_date in
     let ret_date = price_td p.actual_ret_date in
     let price = price_td (string_of_float p.price) in
-    let last_checked = price_td (Utils.string_of_utime p.last_checked) in
+    let last_checked = print_endline (Utils.string_of_utime p.last_checked);price_td (Utils.string_of_utime p.last_checked) in
     let tr_content = airline^dep_date^ret_date^price^last_checked in
     price_tr tr_content
   in

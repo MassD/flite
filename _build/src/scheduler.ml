@@ -31,8 +31,8 @@ let get_all_flights () = get_all "flights" q_all_flights Flite.Flight.of_bson
 (*{flight_id:1037105510,frequency:{$in: [8]}}*)
 let q_alerts flight_id hour = 
   let array_match = Bson.add_element "$in" (Bson.create_list [Bson.create_int32 (Int32.of_int hour)]) Bson.empty in
-  let b = Bson.add_element "flight_id" (Bson.create_int32 (Int32.of_int flight_id)) 
-    (Bson.add_element "frequency" (Bson.create_doc_element array_match) (Bson.empty))
+  let b = Bson.add_element "flight_id" (Bson.create_int32 (Int32.of_int flight_id))
+    (Bson.add_element "frequency" (Bson.create_doc_element array_match) Bson.empty)
   in 
   print_endline (Bson.to_simple_json b);
   b
@@ -48,7 +48,7 @@ let price_to_mongo pl =
   Mongo.insert mongo (List.map Flite.Price.to_bson pl)
 
 let q_price f = 
-  let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 3. *. 60. *. 60.)) Bson.empty in
+  let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 30. *. 60.)) Bson.empty in
   let last_checked = Bson.add_element "last_checked" (Bson.create_doc_element gt) (Bson.empty) in
   Bson.add_element "flight.id" (Bson.create_int32 (Utils.to_int32 f.id)) last_checked
 
@@ -59,8 +59,8 @@ let check_existing_price_lwt f =
   (*print_endline "checked existing_price";*)
   Lwt.return (f, r, (MongoReply.get_num_returned r))
 
-let get_existing_price_lwt r =
-  Lwt.return (Html.format_pl (List.map Flite.Price.of_bson (MongoReply.get_document_list r)))
+let get_existing_price_lwt f r =
+  Lwt.return (Html_2.format_pl f (List.map Flite.Price.of_bson (MongoReply.get_document_list r)))
 
 let get_fs_price_lwt f =
   print_endline "begin fs";
@@ -68,12 +68,12 @@ let get_fs_price_lwt f =
     (fun pl -> 
       print_endline "lastminute finished"; 
       price_to_mongo pl; 
-      Lwt.return (Html.format_pl pl))
+      Lwt.return (Html_2.format_pl f pl))
 
 let get_price_html_lwt f =
   (*print_endline "begin get_price_html_lwt";*)
   (check_existing_price_lwt f) >>= 
-    (fun (f, r, n) -> if n > 0l then (get_existing_price_lwt r) else (get_fs_price_lwt f))
+    (fun (f, r, n) -> if n > 0l then (get_existing_price_lwt f r) else (get_fs_price_lwt f))
 
 let email_price_lwt f =
   (get_price_html_lwt f) >>=
@@ -95,7 +95,7 @@ let print_price_html_lwt f =
 
 
 let rec start () = 
-  (Lwt_unix.sleep 30.)  >>= 
+  (Lwt_unix.sleep (60. *. 60.))  >>= 
     (fun () -> 
       print_endline "\nbegin fs all";
       let fl = get_all_flights () in 
