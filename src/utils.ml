@@ -32,4 +32,6 @@ let string_of_utime ut =
   let t = Unix.gmtime ut in
   Printf.sprintf "%d-%d-%d %d:%d" t.tm_year t.tm_mon t.tm_mday t.tm_hour t.tm_min;; 
 
+let current_hour () = let ut = Unix.gmtime (Unix.time ()) in ut.tm_hour
+
 

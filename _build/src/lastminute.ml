@@ -67,7 +67,7 @@ let content = function
   | _ -> return ""
 
 let download_fs_html_lwt f = 
-  print_endline ("download begin " ^ (build_fs_url f));
+  (*print_endline ("download begin " ^ (build_fs_url f));*)
    Ocsigen_http_client.get_url (build_fs_url f)
 
 let get_fs_html_lwt f =
