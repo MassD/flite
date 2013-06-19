@@ -19,6 +19,7 @@ let get_all collection q of_bson_f =
       else acc
   in 
   let bson_list = get (-1L) [] in
+  Mongo.destory mongo;
   List.map of_bson_f bson_list
 
 
@@ -45,12 +46,20 @@ let get_all_alerts flight_id hour =
   let q () = q_alerts flight_id hour in
   get_all "alerts" q Flite.Alert.of_bson
 
+let q_alerts_simple flight_id = 
+  Bson.add_element "flight_id" (Bson.create_int32 (Int32.of_int flight_id)) (Bson.empty)
+
+let get_all_alerts_simple flight_id  =
+  let q () = q_alerts_simple flight_id  in
+  get_all "alerts" q Flite.Alert.of_bson
+
 
 (* Prices *)
 
 let prices_to_mongo pl =
   let mongo = Mongo.create_local_default "flite" "prices" in
-  Mongo.insert mongo (List.map Flite.Price.to_bson pl)
+  Mongo.insert mongo (List.map Flite.Price.to_bson pl);
+  Mongo.destory mongo
 
 let q_price f = 
   let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 30. *. 60.)) Bson.empty in
@@ -62,6 +71,7 @@ let get_all_prices f =
   let q = q_price f in
   let r = Mongo.find_q mongo q in
   let num = MongoReply.get_num_returned r in
+  Mongo.destory mongo;
   if num = 0l then []
   else 
     List.map Flite.Price.of_bson (MongoReply.get_document_list r)

@@ -7,7 +7,7 @@ let print_html =
 
 let print_table =
   Printf.sprintf "<table style='font-family: \"Trebuchet MS\", sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.4em;
     font-style: normal;
     border-collapse:separate;'>%s%s</table>" (*theader and tbody*)
@@ -75,23 +75,23 @@ let print_tbody_th =
 let print_td_desired = 
   Printf.sprintf "<td style='padding:10px;
     text-align:center;
-    background-color:#DEF3CA;
-    border: 2px solid #9DD929;
+    background-color:#99CCFF;
+    border: 2px solid #6699FF;
     -moz-border-radius:2px;
     -webkit-border-radius:2px;
     border-radius:2px;
-    color:#666;
+    color:#444;
     text-shadow:1px 1px 1px #fff;'>%s</td>"
 
 let print_td_lower =
   Printf.sprintf "<td style='padding:10px;
     text-align:center;
-    background-color:#DEF3CA;
-    border: 2px solid #BAE469;
+    background-color:#FFC2C2;
+    border: 2px solid #FF9999;
     -moz-border-radius:2px;
     -webkit-border-radius:2px;
     border-radius:2px;
-    color:#666;
+    color:#444;
     text-shadow:1px 1px 1px #fff;'>%s</td>"
 
 let print_td_other = 
@@ -102,7 +102,7 @@ let print_td_other =
     -moz-border-radius:2px;
     -webkit-border-radius:2px;
     border-radius:2px;
-    color:#666;
+    color:#444;
     text-shadow:1px 1px 1px #fff;'>%s</td>"
 
 let print_td i j desired_p p = 
@@ -135,7 +135,10 @@ let get_html f pl =
       if j = 7 then acc_j
       else 
 	let p = List.nth pl (i*7+j) in
-	tds i (j+1) (acc_j ^ (print_td i j desired_p p (p.airline^"<br><br>"^(string_of_float p.price))))
+	let new_td_content = 
+	  Printf.sprintf "<a href='%s'>%s</a><br><br>%s" p.airline_http p.airline (string_of_float p.price)
+	in 
+	tds i (j+1) (acc_j ^ (print_td i j desired_p p new_td_content))
     and trs i acc_i =
       if i = 7 then acc_i
       else 
@@ -146,7 +149,7 @@ let get_html f pl =
   in 
   let table = print_table theader tbody 
   in 
-  let footer = Printf.sprintf "<h3><a href='%s'>click here for lastminute</a></h3>" (Lastminute.build_fs_url f)
+  let footer = Printf.sprintf "<h3><a href='%s'>Click here for lastminute.com to buy</a></h3>" (Lastminute.build_fs_url f)
   in 
   print_html title table footer
 	

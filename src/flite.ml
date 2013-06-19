@@ -159,6 +159,7 @@ module Price : sig
       {
         flight: Flight.t;
 	airline : string;
+	airline_http : string;
 	actual_dep_date : string;
 	actual_ret_date : string;
 	price : float;
@@ -174,6 +175,7 @@ struct
       { 
 	flight: Flight.t;
 	airline : string;
+	airline_http : string;
 	actual_dep_date : string;
 	actual_ret_date : string;
 	price : float;
@@ -183,20 +185,23 @@ struct
   let to_bson p = 
     let flight = Bson.create_doc_element (Flight.to_bson p.flight) in
     let airline = Bson.create_string p.airline in
+    let airline_http = Bson.create_string p.airline_http in
     let actual_dep_date = Bson.create_string p.actual_dep_date in
     let actual_ret_date = Bson.create_string p.actual_ret_date in
     let price = Bson.create_double p.price in
     let last_checked = Bson.create_double p.last_checked in
     Bson.add_element "flight" flight 
       (Bson.add_element "airline" airline 
+	 (Bson.add_element "airline_http" airline_http
 	 (Bson.add_element "actual_dep_date" actual_dep_date
 	    (Bson.add_element "actual_ret_date" actual_ret_date
 	       (Bson.add_element "price" price
-		  (Bson.add_element "last_checked" last_checked Bson.empty)))))
+		  (Bson.add_element "last_checked" last_checked Bson.empty))))))
 
   let of_bson bs = 
     let flight = Flight.of_bson (Bson.get_doc_element (Bson.get_element "flight" bs)) in 
     let airline = Bson.get_string (Bson.get_element "airline" bs) in
+    let airline_http = Bson.get_string (Bson.get_element "airline_http" bs) in
     let actual_dep_date = Bson.get_string (Bson.get_element "actual_dep_date" bs) in 
     let actual_ret_date = Bson.get_string (Bson.get_element "actual_ret_date" bs) in
     let price = Bson.get_double (Bson.get_element "price" bs) in 
@@ -204,6 +209,7 @@ struct
     { 
       flight = flight;
       airline = airline;
+      airline_http = airline_http;
       actual_dep_date = actual_dep_date;
       actual_ret_date = actual_ret_date;
       price = price;
@@ -213,6 +219,7 @@ struct
   let to_string p = 
     (Flight.to_string p.flight) ^ "; "
     ^ p.airline ^ ", "
+    ^ p.airline_http ^ ", "
     ^ p.actual_dep_date ^ "-"
     ^ p.actual_ret_date ^ ", "
     ^ string_of_float p.price ^ "-"

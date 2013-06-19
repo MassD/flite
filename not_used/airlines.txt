@@ -1,0 +1,71 @@
+A3->Aegean Airlines->http://www.aegeanair.com/
+EI->Aer Lingus->http://www.aerlingus.com/
+AR->Aerolineas Argentinas->http://www.aerolineas.com.ar/
+AM->Aeromexico->www.aeromexico.com/‎
+AB->Air Berlin->www.airberlin.com/‎
+AC->Air Canada->
+CA->Air China->
+UX->Air Europa->
+AF->Air France->
+AI->Air India->
+KM->Air Malta->
+NZ->Air New Zealand->
+AZ->Alitalia->
+NH->All Nippon Airways->
+AA->American Airlines->
+OZ->Asiana Airlines->
+OS->Austrian Airlines->
+BD->bmi->
+BA->British Airways->
+SN->Brussels Airlines->
+FB->Bulgaria Air->
+CX->Cathay Pacific->
+CI->China Airlines->
+MU->China Eastern Airlines->
+CZ->China Southern Airlines->
+CY->Cyprus Airways->
+DL->Delta Air Lines->
+MS->Egyptair->
+LY->EL AL Israel Airlines->
+EK->Emirates->
+ET->Ethiopian Airlines->
+EY->Etihad Airways->
+BR->Eva Airways->
+AY->Finnair->
+BE->flybe->
+GF->Gulf Air->
+IB->Iberia->
+FI->Icelandair->
+JL->Japan Airlines->
+9W->Jet Airways->
+KQ->Kenya Airways->
+KL->KLM->
+KE->Korean Air->
+KU->Kuwait Airways->
+LA->LAN Airlines S.A.->
+LO->LOT Polish Airlines->
+LH->Lufthansa->
+LG->Luxair->
+MH->Malaysia Airlines->
+IG->Meridiana Fly->
+OA->Olympic Air->
+WY->Oman Air->
+QF->Qantas Airways->
+QR->Qatar Airways->
+AT->Royal Air Maroc->
+BI->Royal Brunei->
+RJ->Royal Jordanian->
+SK->SAS Scandinavian Airlines->
+SQ->Singapore Airlines->
+SA->South African Airways->
+UL->Srilankan Airlines->
+LX->Swiss->
+JJ->TAM Linhas Aereas->
+TP->TAP Portugal->
+TG->Thai Airways->
+TK->Turkish Airlines->
+PS->Ukraine Int'l Airlines->
+UA->United Airlines->
+US->US Airways->
+VN->Vietnam Airlines->
+VS->Virgin Atlantic->

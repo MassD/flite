@@ -21,13 +21,15 @@ let put_to_mongo f a =
     let bson = Flite.Flight.to_bson f in
     Mongo.insert mongo [bson];
   end;
+  Mongo.destory mongo;
   let mongo_a = Mongo.create_local_default "flite" "alerts" in
   let qa = query_alert a in
   let ra = Mongo.find_q_one mongo_a qa in
   (* if alert.user and alert.flight_id exist, remove them and insert new as a kind of update *)
   if MongoReply.get_num_returned ra <> 0l then 
     Mongo.delete_all mongo_a qa;
-  Mongo.insert mongo_a [(Flite.Alert.to_bson a)]
+  Mongo.insert mongo_a [(Flite.Alert.to_bson a)];
+  Mongo.destory mongo_a;
   
 let register dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy desired_airline user email frequency  () =
   let f = 

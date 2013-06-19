@@ -31,5 +31,15 @@ let email_price_lwt f =
       let subj = Printf.sprintf "Flite: from %s to %s, depature on %s-%s, return on %s-%s" f.dep_ap f.arr_ap f.dep_mo f.dep_dy f.ret_mo f.ret_dy in
       let send a = Email.send_lwt (a.user, a.email, subj, ph) in
       Lwt_list.iter_p send alerts)
+
+let email_price_simple_lwt f =
+  (get_price_html_lwt f) >>=
+    (fun ph ->
+      print_endline "begin emailing";
+      let alerts = get_all_alerts_simple f.id in
+      print_endline ("find alerts: "^(string_of_int (List.length alerts)));
+      let subj = Printf.sprintf "Flite: from %s to %s, depature on %s-%s, return on %s-%s" f.dep_ap f.arr_ap f.dep_mo f.dep_dy f.ret_mo f.ret_dy in
+      let send a = Email.send_lwt (a.user, a.email, subj, ph) in
+      Lwt_list.iter_p send alerts)
  
 

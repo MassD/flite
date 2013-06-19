@@ -43,10 +43,12 @@ let parse f html =
 	  let (dep_mo, next) = extract next dep_mo_begin value_end in
 	  let (ret_dy, next) = extract next ret_dy_begin value_end in
 	  let (ret_mo, next) = extract next ret_mo_begin value_end in
+	  (*print_endline (airline^(Airlines.get_http_from_name airline));*)
 	  let fr = 
 	    { 
 	      flight = f;
 	      airline = String.capitalize airline;
+	      airline_http = Airlines.get_http_from_name (String.lowercase airline);
 	      actual_dep_date = dep_mo ^ "-" ^ dep_dy;
 	      actual_ret_date = ret_mo ^ "-" ^ ret_dy;
 	      price = float_of_string price;
