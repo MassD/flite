@@ -134,7 +134,7 @@ let get_html f pl =
       if j = 7 then acc_j
       else 
 	let p = List.nth pl (i*7+j) in
-	tds i (j+1) (acc_j ^ (print_td i j desired_p p (p.airline^"<br>"^(string_of_float p.price))))
+	tds i (j+1) (acc_j ^ (print_td i j desired_p p (p.airline^"<br><br>"^(string_of_float p.price))))
     and trs i acc_i =
       if i = 7 then acc_i
       else 
