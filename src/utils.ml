@@ -2,8 +2,6 @@ open Unix;;
 
 let to_int32 = Int32.of_int;;
 
-
-
 let to_utime s = 
   let sp_list = Str.split (Str.regexp_string "-") s in
   let year = List.nth sp_list 0 in
@@ -24,10 +22,12 @@ let to_utime s =
   in 
   utime;;
 
+(* Using Unix.localtime instead of Unix.gmtime *)
+(* http://stackoverflow.com/questions/17188464/why-unix-tm-hour-is-the-real-hour-minus-one *)
 let string_of_utime time = 
-  let gtime = Unix.gmtime time in
-  Printf.sprintf "%d-%d-%d %d:%d:%d" (gtime.tm_year+1900) (gtime.tm_mon+1) (gtime.tm_mday) (gtime.tm_hour+1) gtime.tm_min gtime.tm_sec
+  let gtime = Unix.localtime time in
+  Printf.sprintf "%d-%d-%d %d:%d:%d" (gtime.tm_year+1900) (gtime.tm_mon+1) (gtime.tm_mday) (gtime.tm_hour) gtime.tm_min gtime.tm_sec
 
-let current_hour () = let ut = Unix.gmtime (Unix.time ()) in ut.tm_hour
+let current_hour () = let ut = Unix.localtime (Unix.time ()) in ut.tm_hour
 
 
