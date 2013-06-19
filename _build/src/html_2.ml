@@ -1,5 +1,6 @@
 open Flite.Price
 open Flite.Flight
+open Lwt
 
 let print_html =
   Printf.sprintf "<html><body>%s%s%s</body></html>" (*title, table and footer*)
