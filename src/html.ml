@@ -1,5 +1,5 @@
-open Flite.Price
-open Flite.Flight
+open Flite_type.Journey
+open Flite_type.Price
 open Lwt
 
 let print_html =
@@ -115,9 +115,9 @@ let print_td i j desired_p p =
 	print_td_other
     end
 
-let get_html f pl =
+let get_html j pl =
   let title =
-    (Printf.sprintf "<h2>From %s to %s, depature on %s-%s, return on %s-%s</h2>" f.dep_ap f.arr_ap f.dep_mo f.dep_dy f.ret_mo f.ret_dy)
+    (Printf.sprintf "<h2>From %s to %s, depature on %s-%s, return on %s-%s</h2>" j.dep_ap j.arr_ap j.dep_mo j.dep_dy j.ret_mo j.ret_dy)
   in 
   let theader = 
     let rec ths i acc = 
@@ -136,7 +136,10 @@ let get_html f pl =
       else 
 	let p = List.nth pl (i*7+j) in
 	let new_td_content = 
-	  Printf.sprintf "<a href='%s'>%s</a><br><br>%s" p.airline_http p.airline (string_of_float p.price)
+	  if p.airline_http = "n/a" then 
+	    Printf.sprintf "%s<br><br>%s" p.airline (string_of_float p.price)
+	  else 
+	    Printf.sprintf "<a href='%s'>%s</a><br><br>%s" p.airline_http p.airline (string_of_float p.price)
 	in 
 	tds i (j+1) (acc_j ^ (print_td i j desired_p p new_td_content))
     and trs i acc_i =
@@ -149,7 +152,7 @@ let get_html f pl =
   in 
   let table = print_table theader tbody 
   in 
-  let footer = Printf.sprintf "<h3><a href='%s'>Click here for lastminute.com to buy</a></h3>" (Lastminute.build_fs_url f)
+  let footer = Printf.sprintf "<h3><a href='%s'>Click here for lastminute.com to buy</a></h3>" (Lastminute.build_fs_url j)
   in 
   print_html title table footer
 	
@@ -161,7 +164,7 @@ let preprocess pl =
   in 
   List.sort comp pl;;
 
-let format_pl f pl = get_html f (preprocess pl)
+let format_pl j pl = get_html j (preprocess pl)
 
 
     
