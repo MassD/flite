@@ -83,7 +83,7 @@ let content = function
 
 let download_fs_html_lwt j = 
   (*print_endline ("download begin " ^ (build_fs_url j));*)
-   Ocsigen_http_client.get_url (build_fs_url j)
+   Ocsigen_http_client.get_url ~headers:(Http_headers.add Http_headers.user_agent "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36" Http_headers.empty) (build_fs_url j)
 
 let get_fs_html_lwt j =
   (download_fs_html_lwt j) >>= (fun response_body -> print_endline "finished download fs";content response_body)
