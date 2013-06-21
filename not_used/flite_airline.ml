@@ -1,3 +1,6 @@
+open Flite_mongo_lwt
+open Lwt
+
 type t = 
     {
       name : string;

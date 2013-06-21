@@ -216,3 +216,35 @@ struct
     (string_of_float p.price)
     (Utils.string_of_utime p.last_checked)
 end
+
+module Airline : sig
+  type t =
+      {
+	name : string;
+	code : string;
+	http : string
+      }
+
+  val to_bson : t -> Bson.t
+  val of_bson : Bson.t -> t
+end =  
+struct
+  type t = 
+      {
+	name : string;
+	code : string;
+	http : string
+      }
+	
+  let to_bson a = 
+    Bson.add_element "name" (Bson.create_string a.name) 
+      (Bson.add_element "code" (Bson.create_string a.code) 
+	 (Bson.add_element "http" (Bson.create_string a.http) Bson.empty));;
+
+  let of_bson bs = 
+    {
+      name = Bson.get_string (Bson.get_element "name" bs) ;
+      code = Bson.get_string (Bson.get_element "code" bs) ;
+      http = Bson.get_string (Bson.get_element "http" bs) 
+    }
+end

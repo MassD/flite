@@ -2,6 +2,7 @@ open Flite_type
 open Flite_type.Journey
 open Flite_type.Price
 open Flite_type.Alert
+open Flite_type.Airline
 open Lwt
 
 exception Mongo_collection_not_found of string
@@ -19,7 +20,7 @@ let pool collection =
 let journeys_pool = pool "journeys"
 let alerts_pool = pool "alerts"
 let prices_pool = pool "prices"
-
+let airlines_pool = pool "airlines"
 
 let get_all collection q of_bson_f =
   let pool = 
@@ -27,6 +28,7 @@ let get_all collection q of_bson_f =
       | "journeys" -> journeys_pool
       | "alerts" -> alerts_pool
       | "prices" -> prices_pool
+      | "airlines" -> airlines_pool
       | _ -> raise (Mongo_collection_not_found collection) in
   let rec get m cursor acc =
     if cursor = 0L then acc
@@ -137,3 +139,16 @@ let get_all_prices f =
     Bson.add_element "flight.id" (Bson.create_int32 (Utils.to_int32 f.id)) last_checked
   in 
   get_all "prices" q Price.of_bson
+
+(* Airlines *)
+
+let get_airline name = 
+  let q = Bson.add_element "name" (Bson.create_string name) (Bson.empty) in
+  get_single "airlines" q Airline.of_bson
+
+let get_all_airlines () =
+  let q = 
+    let exists = Bson.add_element "$exists" (Bson.create_boolean true) Bson.empty in
+    Bson.add_element "name" (Bson.create_doc_element exists) (Bson.empty)
+  in 
+  get_all "airlines" q Airline.of_bson

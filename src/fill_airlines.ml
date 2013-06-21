@@ -1,4 +1,4 @@
-open Airlines
+open Flite_type.Airline
 
 let query_code a_code = Bson.add_element "code" (Bson.create_string a_code) (Bson.empty)
 

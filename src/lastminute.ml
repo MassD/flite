@@ -2,11 +2,12 @@ open Http_client.Convenience;;
 open Flite_type
 open Flite_type.Journey
 open Flite_type.Price
+open Flite_type.Airline
+open Flite_mongo_lwt
 open Lwt
-open Airlines
 
 let airline_tbl =
-  let al = Airlines.get_all_airlines () in
+  let al = Lwt_main.run ((get_all_airlines ()) >>= (fun al -> return al)) in
   let tbl = Hashtbl.create (List.length al) in
   List.iter (fun a -> Hashtbl.add tbl a.name a) al;
   tbl
