@@ -8,6 +8,7 @@
 *.ml~
 *.ml#
 *.mli~
+*.sh~
 *.mli#
 *.native
 *.byte
