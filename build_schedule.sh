@@ -1,2 +1,2 @@
-ocamlbuild -use-ocamlfind src/simple_start.native
-ocamlbuild -use-ocamlfind src/schedule.native
+ocamlbuild -use-ocamlfind -I src main/simple_start.native
+ocamlbuild -use-ocamlfind -I src main/schedule.native
