@@ -10,7 +10,7 @@ let rec start () =
     (fun () -> 
       print_endline "begin fs all";
       (get_all_journeys ()) >>=
-	(fun fl -> (Lwt_list.iter_p email_price_simple_lwt fl) >>= start)
+	(fun fl -> Lwt_list.iter_p email_price_simple_lwt fl)
     )
 
 let _ = Lwt_main.run (start()) 
