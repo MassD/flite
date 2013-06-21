@@ -30,4 +30,13 @@ let string_of_utime time =
 
 let current_hour () = let ut = Unix.localtime (Unix.time ()) in ut.tm_hour
 
+let is_alive fd  =
+  try 
+    (let out_ch = Unix.out_channel_of_descr fd in
+     output_byte out_ch 0;
+     flush out_ch;
+     true
+    )
+  with Unix_error (_,_,_) -> false
+
 

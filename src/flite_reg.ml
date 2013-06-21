@@ -1,6 +1,7 @@
 open Flite_type
 open Flite_type.Journey
 open Flite_type.Alert
+open Lwt
 
 let register_journey dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy airline trip_type user email frequency  () =
   let j_tmp = 
@@ -40,7 +41,8 @@ let register_journey dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy airline trip_type
   in 
   print_endline (Journey.to_string j);
   print_endline (Alert.to_string a);
-  Flite_mongo.journey_to_mongo j a
+  (*Flite_mongo.journey_to_mongo j a*)
+  Lwt_main.run (Flite_mongo_lwt.journey_to_mongo j a)
 
 
 
