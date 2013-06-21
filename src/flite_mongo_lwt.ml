@@ -85,7 +85,10 @@ let journey_to_mongo j a =
     in 
     Lwt_pool.use pool insert
   in 
-  (get_journey j.id) >>=
+  (*lwt exist_j = get_journey j.id and exist_a = get_alert j.id a.user in
+lwt a = to_mongo exist_j "journeys" (fun () -> Journey.to_bson j) and b = to_mongo exist_a "alerts" (fun () -> Alert.to_bson a) in
+return ()*)
+ (get_journey j.id) >>=
       (fun exist -> 
 	(to_mongo exist "journeys" (fun () -> Journey.to_bson j)) >>=
 	  (fun () -> 
