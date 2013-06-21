@@ -2,6 +2,7 @@ open Flite_type
 open Flite_type.Journey
 open Flite_type.Price
 open Flite_type.Alert
+open Lwt
 
 let get_all collection q of_bson_f =
   let mongo = Mongo.create_local_default "flite" collection in
@@ -105,3 +106,14 @@ let get_all_prices f =
     Bson.add_element "flight.id" (Bson.create_int32 (Utils.to_int32 f.id)) last_checked
   in 
   get_all "prices" q Price.of_bson
+
+
+(* Pool **)
+(*
+let journey_pool = 
+  Lwt_pool.create 
+    10
+    ~checker: 
+    (
+      let checker m f = 
+    )*)

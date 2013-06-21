@@ -1,2 +1,2 @@
-<**/src/*>: package(async_core), package(core), package(uri),package(lwt), package(lwt.unix), package(unix), package(netclient), package(mongo), package(str), package(uri),package(ocsigenserver),package(smtp),package(netstring),package(csv),thread
+<**/src/*>: package(async_core), package(core), package(uri),package(lwt), package(lwt.unix), package(unix), package(netclient), package(bson,mongo), package(str), package(uri),package(ocsigenserver),package(smtp),package(netstring),package(csv),thread
 <**/test/*>: package(async_core), package(unix), package(str),package(netclient), package(mongo), package(xml-light), thread

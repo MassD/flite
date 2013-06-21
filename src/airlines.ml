@@ -26,7 +26,7 @@ let get_http_from_name a_name =
   let mongo = Mongo.create_local_default "flite" "airlines" in
   let rf = Mongo.find_q_one mongo (query_name a_name) in
   if MongoReply.get_num_returned rf = 0l then 
-    "n/a"
+    ""
   else 
     let doc_list = MongoReply.get_document_list rf in
     let a = of_bson (List.nth doc_list 0) in

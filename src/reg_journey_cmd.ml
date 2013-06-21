@@ -22,7 +22,7 @@ let command =
         ~doc:" The return month, e.g., 2013-10"
       +> flag "-ret-dy" (required string) 
         ~doc:" The return day, e.g., 2013-10"
-      +> flag "-airline" (optional_with_default "N/A" string) 
+      +> flag "-airline" (optional_with_default "" string) 
         ~doc:" The desired airline, e.g. KLM, "
       +> flag "-trip-type" (optional_with_default 1 int) 
         ~doc:" The trip type, single=0, return=1, multihop=2 "

@@ -136,7 +136,7 @@ let get_html j pl =
       else 
 	let p = List.nth pl (i*7+j) in
 	let new_td_content = 
-	  if p.airline_http = "n/a" then 
+	  if String.length p.airline_http = 0 then 
 	    Printf.sprintf "%s<br><br>%s" p.airline (string_of_float p.price)
 	  else 
 	    Printf.sprintf "<a href='%s'>%s</a><br><br>%s" p.airline_http p.airline (string_of_float p.price)
