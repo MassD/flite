@@ -4,6 +4,7 @@ open Flite_type.Price
 open Flite_type.Alert
 open Flite_type.Airline
 open Lwt
+open Logging
 
 exception Mongo_collection_not_found of string
 exception Mongo_wrong_collection of string
@@ -15,7 +16,7 @@ let pool collection =
     10
     (*~check: (fun m f -> f (Utils.is_alive (Mongo.get_file_descr m)))
     ~validate:(fun m -> return (Utils.is_alive (Mongo.get_file_descr m)))*)
-    (fun () -> return (Mongo.create_local_default "flite" collection))
+    (fun () -> flite_notice "create pool: %s" collection;return (Mongo.create_local_default "flite" collection))
 
 let journeys_pool = pool "journeys"
 let alerts_pool = pool "alerts"
@@ -41,7 +42,8 @@ let get_all collection q of_bson_f =
       in 
       if MongoReply.get_num_returned r > 0l then
 	let doc_list = MongoReply.get_document_list r in
-	get m (MongoReply.get_cursor r) (List.rev_append acc doc_list)
+	try (get m (MongoReply.get_cursor r) (List.rev_append acc doc_list)) with
+	  | _ as exn -> mongo_error ~exn:exn "Cannot get_all, collection=%s, q=%s" collection (Bson.to_simple_json q);[]
       else acc
   in 
   Lwt_pool.use pool (fun m -> return (List.map of_bson_f (get m (-1L) [])))
@@ -78,8 +80,11 @@ let journey_to_mongo j a =
       (
 	match exist with
 	  | None -> 
-	    Printf.printf "inserting to %s, %s\n" collection (Bson.to_simple_json (to_bson()));
-	    Mongo.insert m [(to_bson ())]
+	    (*Printf.printf "inserting to %s, %s\n" collection (Bson.to_simple_json (to_bson()));*)
+	    let bson = to_bson() in
+	    (try (Mongo.insert m [bson]) with
+	      | _ as exn -> mongo_error ~exn:exn "Cannot insert journeys, collection=%s, bson=%s" collection (Bson.to_simple_json bson)
+	    )
 	  | _ -> ()
       )
     in 

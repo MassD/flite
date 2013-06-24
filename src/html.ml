@@ -1,6 +1,7 @@
 open Flite_type.Journey
 open Flite_type.Price
 open Lwt
+open Logging
 
 let print_html =
   Printf.sprintf "<html><body>%s%s%s</body></html>" (*title, table and footer*)
@@ -116,45 +117,51 @@ let print_td i j desired_p p =
     end
 
 let get_html j pl =
-  let title =
-    (Printf.sprintf "<h2>From %s to %s, depature on %s-%s, return on %s-%s</h2>" j.dep_ap j.arr_ap j.dep_mo j.dep_dy j.ret_mo j.ret_dy)
-  in 
-  let theader = 
-    let rec ths i acc = 
-      if i = 7 then acc
-      else 
-	let p = List.nth pl i in
-	let th = print_theader_th p.actual_ret_date in
-	ths (i+1) (acc^th) 
+  if List.length pl = 0 then begin
+    flite_warning "no prices obtain for journey=%d, returning empty html email" j.id;
+    None end
+  else begin
+    let title =
+      (Printf.sprintf "<h2>From %s to %s, depature on %s-%s, return on %s-%s</h2>" j.dep_ap j.arr_ap j.dep_mo j.dep_dy j.ret_mo j.ret_dy)
     in 
-    print_theader (ths 0 "<th style='background:transparent;border:none;'></th>")
-  in 
-  let tbody =
-    let desired_p = List.nth pl 24 in
-    let rec tds i j acc_j = 
-      if j = 7 then acc_j
-      else 
-	let p = List.nth pl (i*7+j) in
-	let new_td_content = 
-	  if String.length p.airline_http = 0 then 
-	    Printf.sprintf "%s<br><br>%s" p.airline (string_of_float p.price)
-	  else 
-	    Printf.sprintf "<a href='%s'>%s</a><br><br>%s" p.airline_http p.airline (string_of_float p.price)
-	in 
-	tds i (j+1) (acc_j ^ (print_td i j desired_p p new_td_content))
-    and trs i acc_i =
-      if i = 7 then acc_i
-      else 
-	let p = List.nth pl (i*7) in
-	trs (i+1) (acc_i ^ (print_tbody_th (p.actual_dep_date) (tds i 0 "")))
+    let theader = 
+      let rec ths i acc = 
+	if i = 7 then acc
+	else 
+	  let p = List.nth pl i in
+	  let th = print_theader_th p.actual_ret_date in
+	  ths (i+1) (acc^th) 
+      in 
+      print_theader (ths 0 "<th style='background:transparent;border:none;'></th>")
     in 
-    print_tbody (trs 0 "")
-  in 
-  let table = print_table theader tbody 
-  in 
-  let footer = Printf.sprintf "<h3><a href='%s'>Click here for lastminute.com to buy</a></h3>" (Lastminute.build_fs_url j)
-  in 
-  print_html title table footer
+    let tbody =
+      let desired_p = List.nth pl 24 in
+      let rec tds i j acc_j = 
+	if j = 7 then acc_j
+	else 
+	  let p = List.nth pl (i*7+j) in
+	  let new_td_content = 
+	    if String.length p.airline_http = 0 then 
+	      Printf.sprintf "%s<br><br>%s" p.airline (string_of_float p.price)
+	    else 
+	      Printf.sprintf "<a href='%s'>%s</a><br><br>%s" p.airline_http p.airline (string_of_float p.price)
+	  in 
+	  tds i (j+1) (acc_j ^ (print_td i j desired_p p new_td_content))
+      and trs i acc_i =
+	if i = 7 then acc_i
+	else 
+	  let p = List.nth pl (i*7) in
+	  trs (i+1) (acc_i ^ (print_tbody_th (p.actual_dep_date) (tds i 0 "")))
+      in 
+      print_tbody (trs 0 "")
+    in 
+    let table = print_table theader tbody 
+    in 
+    let footer = Printf.sprintf "<h3><a href='%s'>Click here for lastminute.com to buy</a></h3>" (Lastminute.build_fs_url j)
+    in 
+    flite_notice "html email is created for journey=%d" j.id;
+    Some (print_html title table footer)
+  end 
 	
 let preprocess pl =
   let comp p1 p2 =
@@ -164,7 +171,11 @@ let preprocess pl =
   in 
   List.sort comp pl;;
 
-let format_pl j pl = get_html j (preprocess pl)
+let format_pl j pl = 
+  try(get_html j (preprocess pl)) with
+    | _ as exn -> 
+      flite_error ~exn:exn "error in email html construction for journey=%d, returning None" j.id; 
+      None
 
 
     
