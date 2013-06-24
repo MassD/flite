@@ -1,9 +1,9 @@
 open Flite_type.Airline
 
-let query_code a_code = Bson.add_element "code" (Bson.create_string a_code) (Bson.empty)
+let query_name a_name = Bson.add_element "name" (Bson.create_string a_name) (Bson.empty)
 
 let airline_to_mongo a m =
-  let rf = Mongo.find_q_one m (query_code a.code) in
+  let rf = Mongo.find_q_one m (query_name a.name) in
   if MongoReply.get_num_returned rf = 0l then 
     Mongo.insert m [(to_bson a)]
 
