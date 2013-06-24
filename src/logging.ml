@@ -27,7 +27,7 @@ let logger =
       let exist = Sys.file_exists "/var/log/flite" in
       if not exist then Unix.mkdir "/var/log/flite" 0o640;
       file 
-	~template:"$(level):$(date): $(section): $(loc-file): $(loc-line): $(loc-column): $(message)"
+	~template:"[$(section).$(level).$(date).($(loc-file),$(loc-line),$(loc-column))]: $(message)"
 	~file_name:"/var/log/flite/flite.log" 
 	()
     )
