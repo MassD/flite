@@ -42,7 +42,7 @@ let get_fs_html j = http_get (build_fs_url j)
 
 let parse j html = 
   let html_len = String.length html in
-  lastminute_notice "lastminute html length=%d" html_len;
+  lastminute_notice "lastminute html length=%d, %s" html_len html;
   let rec parse_rec start acc =
     if start >= html_len then acc
     else begin

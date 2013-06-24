@@ -40,7 +40,7 @@ let get_all collection q of_bson_f =
 	else 
 	  Mongo.get_more m cursor
       in 
-      if MongoReply.get_num_returned r > 0l then
+      if MongoReply.get_num_returned r > 0l then 
 	let doc_list = MongoReply.get_document_list r in
 	try (get m (MongoReply.get_cursor r) (List.rev_append acc doc_list)) with
 	  | _ as exn -> mongo_error ~exn:exn "Cannot get_all, collection=%s, q=%s" collection (Bson.to_simple_json q);[]
@@ -159,4 +159,14 @@ let get_all_airlines () =
     let exists = Bson.add_element "$exists" (Bson.create_boolean true) Bson.empty in
     Bson.add_element "name" (Bson.create_doc_element exists) (Bson.empty)
   in 
+  Printf.printf "airlines q json: %s\n" (Bson.to_simple_json q);
   get_all "airlines" q Airline.of_bson
+
+let _ = 
+  Lwt_main.run (
+    (get_all_airlines ()) >>= 
+      (fun airlines ->
+	Lwt_io.printf "got %d airlines\n" (List.length airlines)
+      )
+  )
+
