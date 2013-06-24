@@ -5,14 +5,19 @@ open Lwt
 open Lwt_log
 open Logging
 
-let frequency = 60. *. 60.
+let frequency = 30. *. 60.
 
 let rec start () = 
   (Lwt_unix.sleep frequency)  >>= 
     (fun () -> 
-      schedule_notice "Begin a new round";
-      (get_all_journeys ()) >>=
-	(fun fl -> (Lwt_list.iter_p email_price_lwt fl) >>= start)
+      try (
+	schedule_notice "Begin a new round";
+	(get_all_journeys ()) >>=
+	  (fun fl -> (Lwt_list.iter_p email_price_lwt fl) >>= start)
+      ) with
+	| _ as exn -> 
+	  schedule_error ~exn:exn "%s" "error occurs in main loop";
+	  start ()
     )
 
 let _ = Lwt_main.run (start()) 

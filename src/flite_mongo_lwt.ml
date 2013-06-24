@@ -142,7 +142,7 @@ let prices_to_mongo pl =
 (* Public *)
 let get_all_prices f = 
   let q = 
-    let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 30. *. 60.)) Bson.empty in
+    let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 20. *. 60.)) Bson.empty in
     let last_checked = Bson.add_element "last_checked" (Bson.create_doc_element gt) (Bson.empty) in
     Bson.add_element "flight.id" (Bson.create_int32 (Utils.to_int32 f.id)) last_checked
   in 
