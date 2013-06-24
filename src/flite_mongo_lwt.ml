@@ -162,11 +162,3 @@ let get_all_airlines () =
   Printf.printf "airlines q json: %s\n" (Bson.to_simple_json q);
   get_all "airlines" q Airline.of_bson
 
-let _ = 
-  Lwt_main.run (
-    (get_all_airlines ()) >>= 
-      (fun airlines ->
-	Lwt_io.printf "got %d airlines\n" (List.length airlines)
-      )
-  )
-
