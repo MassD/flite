@@ -42,8 +42,8 @@ let get_all collection q of_bson_f =
       in 
       if MongoReply.get_num_returned r > 0l then 
 	let doc_list = MongoReply.get_document_list r in
-	try (get m (MongoReply.get_cursor r) (List.rev_append acc doc_list)) with
-	  | _ as exn -> mongo_error ~exn:exn "Cannot get_all, collection=%s, q=%s" collection (Bson.to_simple_json q);[]
+	try(get m (MongoReply.get_cursor r) (List.rev_append acc doc_list)) with
+	  | exn -> mongo_error ~exn:exn "Cannot get_all, collection=%s, q=%s" collection (Bson.to_simple_json q);[]
       else acc
   in 
   Lwt_pool.use pool (fun m -> return (List.map of_bson_f (get m (-1L) [])))
@@ -83,7 +83,7 @@ let journey_to_mongo j a =
 	    (*Printf.printf "inserting to %s, %s\n" collection (Bson.to_simple_json (to_bson()));*)
 	    let bson = to_bson() in
 	    (try (Mongo.insert m [bson]) with
-	      | _ as exn -> mongo_error ~exn:exn "Cannot insert journeys, collection=%s, bson=%s" collection (Bson.to_simple_json bson)
+	      | exn -> mongo_error ~exn:exn "Cannot insert journeys, collection=%s, bson=%s" collection (Bson.to_simple_json bson)
 	    )
 	  | _ -> ()
       )
@@ -142,7 +142,7 @@ let prices_to_mongo pl =
 (* Public *)
 let get_all_prices f = 
   let q = 
-    let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 20. *. 60.)) Bson.empty in
+    let gt = Bson.add_element "$gt" (Bson.create_double ((Unix.time()) -. 5. *. 60.)) Bson.empty in
     let last_checked = Bson.add_element "last_checked" (Bson.create_doc_element gt) (Bson.empty) in
     Bson.add_element "flight.id" (Bson.create_int32 (Utils.to_int32 f.id)) last_checked
   in 
