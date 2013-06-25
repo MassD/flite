@@ -121,7 +121,7 @@ let fs_lwt j =
     (fun html -> 
       let pl = parse j html in
       let len = List.length pl in 
-      if len = 0 then lastminute_warning "cannot obtain any price for journey=%d" j.id
+      if len = 0 then lastminute_warning "cannot obtain any price for journey=%d, html=%s" j.id html
       else lastminute_notice "obtained %d prices for journey=%d\n" len j.id;
       Lwt.return pl)
     
