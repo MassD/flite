@@ -3,22 +3,22 @@ open Lwt_log
 
 let mongo_section = 
   let s = Section.make "mongo" in
-  Section.set_level s Notice;
+  Section.set_level s Warning;
   s
 
 let flite_section =
   let s = Section.make "flite" in
-  Section.set_level s Notice;
+  Section.set_level s Warning;
   s
 
 let lastminute_section = 
 let s = Section.make "lastminute" in
-  Section.set_level s Notice;
+  Section.set_level s Warning;
   s
 
 let schedule_section = 
   let s = Section.make "schedule" in
-  Section.set_level s Notice;
+  Section.set_level s Warning;
   s
 
 let logger = 

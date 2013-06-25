@@ -11,7 +11,7 @@ let rec start () =
   (Lwt_unix.sleep frequency)  >>= 
     (fun () -> 
       try_lwt (
-	schedule_notice "Begin a new round";
+	schedule_warning "Begin a new round";
 	(get_all_journeys ()) >>=
 	  (fun fl -> (Lwt_list.iter_p email_price_lwt fl) >>= start)
       ) with
