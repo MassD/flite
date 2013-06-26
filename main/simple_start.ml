@@ -1,5 +1,5 @@
 open Flite_type.Journey
-open Flite_mongo_lwt
+open Flite_mongo
 open Flite_fs
 open Lwt
 open Logging

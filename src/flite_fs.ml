@@ -4,7 +4,7 @@ open Flite_type.Price
 open Flite_type.Alert
 open Lwt
 open Logging
-open Flite_mongo_lwt
+open Flite_mongo
 open Printf
 
 let get_fs_price_lwt j =

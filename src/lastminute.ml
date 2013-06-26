@@ -3,7 +3,7 @@ open Flite_type
 open Flite_type.Journey
 open Flite_type.Price
 open Flite_type.Airline
-open Flite_mongo_lwt
+open Flite_mongo
 open Lwt
 open Ocsigen_http_frame
 open Http_header
