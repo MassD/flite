@@ -5,15 +5,15 @@ open Flite_type.Alert
 open Flite_type.Airline
 open Lwt
 
-val journey_to_mongo : Journey.t -> Alert.t -> unit Lwt.t
+type collection =
+  | Journeys
+  | Alerts
+  | Prices
+  | Airlines
 
-val get_all_journeys : unit -> Journey.t list Lwt.t
+val from_mongo_all : collection -> Bson.t -> (Bson.t -> 'a) -> 'a list Lwt.t
+val from_mongo_single : collection -> Bson.t -> (Bson.t -> 'a) -> 'a option Lwt.t
+val to_mongo : collection -> Bson.t list -> unit Lwt.t
+val update_mongo : collection -> Bson.t -> Bson.t -> unit Lwt.t
 
-val get_all_alerts : int -> int -> Alert.t list Lwt.t
-val get_all_alerts_simple : int -> Alert.t list Lwt.t
 
-val prices_to_mongo : Price.t list -> unit Lwt.t
-val get_all_prices : Journey.t -> Price.t list Lwt.t
-
-val get_airline : string -> Airline.t option Lwt.t
-val get_all_airlines : unit -> Airline.t list Lwt.t

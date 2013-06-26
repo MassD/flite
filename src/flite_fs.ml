@@ -4,16 +4,17 @@ open Flite_type.Price
 open Flite_type.Alert
 open Lwt
 open Logging
-open Flite_mongo
+open Flite_mongo_alert
+open Flite_mongo_price
 open Printf
 
 let get_fs_price_lwt j =
   (Lastminute.fs_lwt j) >>= 
     (fun pl -> 
-      (prices_to_mongo pl) >>= (fun () -> return pl))
+      (Flite_mongo_price.to_mongo pl) >>= (fun () -> return pl))
 
 let get_price_lwt j =
-  (get_all_prices j) >>= 
+  (get_all_prices j.id) >>= 
     (fun pl -> if pl = [] then get_fs_price_lwt j else return pl)
 
 let get_price_html_lwt j =

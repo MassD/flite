@@ -41,9 +41,8 @@ let register_journey dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy airline trip_type
   in 
   print_endline (Journey.to_string j);
   print_endline (Alert.to_string a);
-  (*Flite_mongo.journey_to_mongo j a*)
-  Lwt_main.run (Flite_mongo.journey_to_mongo j a)
-
+  Lwt_main.run (Flite_mongo_journey.to_mongo j);
+  Lwt_main.run (Flite_mongo_alert.to_mongo a)
 
 
 
