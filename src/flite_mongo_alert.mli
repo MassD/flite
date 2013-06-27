@@ -5,3 +5,5 @@ open Lwt
 val get_all_alerts : int -> int -> Alert.t list Lwt.t
 val get_all_alerts_simple : int -> Alert.t list Lwt.t
 val to_mongo : Alert.t -> unit Lwt.t
+
+val get_current_alerts : int -> Alert.t list Lwt.t

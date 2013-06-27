@@ -20,7 +20,7 @@ module Journey : sig
       infants : int;
       trip_type : int; (* 0 - single; 1 - return; 2 - multihop *)
 
-      last_checked : float;
+      last_fsed : float;
       id : int;
     }
 
@@ -50,7 +50,7 @@ struct
       infants : int;
       trip_type : int;
 
-      last_checked : float;
+      last_fsed : float;
       id : int;
     } 
 
@@ -70,7 +70,7 @@ struct
 				       (Bson.add_element "children" (Bson.create_int32 (Int32.of_int j.children))
 					  (Bson.add_element "infants" (Bson.create_int32 (Int32.of_int j.infants))
 					     (Bson.add_element "trip_type" (Bson.create_int32 (Int32.of_int j.trip_type))
-						(Bson.add_element "last_checked" (Bson.create_double j.last_checked)
+						(Bson.add_element "last_fsed" (Bson.create_double j.last_fsed)
 						   (Bson.add_element "id" (Bson.create_int32 (Int32.of_int j.id)) Bson.empty))))))))))))))))
 
   let of_bson bs = 
@@ -94,7 +94,7 @@ struct
       infants = Int32.to_int (Bson.get_int32 (Bson.get_element "infants" bs));  
       trip_type = Int32.to_int (Bson.get_int32 (Bson.get_element "trip_type" bs));  
 
-      last_checked = Bson.get_double (Bson.get_element "last_checked" bs);
+      last_fsed = Bson.get_double (Bson.get_element "last_fsed" bs);
       id = Int32.to_int (Bson.get_int32 (Bson.get_element "id" bs));    
     }
 

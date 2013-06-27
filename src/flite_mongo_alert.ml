@@ -30,3 +30,10 @@ let to_mongo a =
 	| None -> to_mongo Alerts [Alert.to_bson a]
 	| _ -> return_unit
     )
+
+let get_current_alerts hour =
+  let q = 
+    let array_match = Bson.add_element "$in" (Bson.create_list [Bson.create_int32 (Int32.of_int hour)]) Bson.empty in
+      Bson.add_element "frequency" (Bson.create_doc_element array_match) Bson.empty
+  in 
+  from_mongo_all Alerts q Alert.of_bson

@@ -25,7 +25,7 @@ let register_journey dep_ap arr_ap dep_mo dep_dy ret_mo ret_dy airline trip_type
     infants = 0;
     trip_type = trip_type;
 
-    last_checked = -1.;
+    last_fsed = 0.;
     id = -1
   } in
   let j = {j_tmp with id = Hashtbl.hash (Journey.to_string j_tmp)} in
