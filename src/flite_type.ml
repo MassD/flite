@@ -20,7 +20,7 @@ module Journey : sig
       infants : int;
       trip_type : int; (* 0 - single; 1 - return; 2 - multihop *)
 
-      last_checked : float;
+      last_fsed : float;
       id : int;
     }
 
@@ -50,7 +50,7 @@ struct
       infants : int;
       trip_type : int;
 
-      last_checked : float;
+      last_fsed : float;
       id : int;
     } 
 
@@ -70,7 +70,7 @@ struct
 				       (Bson.add_element "children" (Bson.create_int32 (Int32.of_int j.children))
 					  (Bson.add_element "infants" (Bson.create_int32 (Int32.of_int j.infants))
 					     (Bson.add_element "trip_type" (Bson.create_int32 (Int32.of_int j.trip_type))
-						(Bson.add_element "last_checked" (Bson.create_double j.last_checked)
+						(Bson.add_element "last_fsed" (Bson.create_double j.last_fsed)
 						   (Bson.add_element "id" (Bson.create_int32 (Int32.of_int j.id)) Bson.empty))))))))))))))))
 
   let of_bson bs = 
@@ -94,7 +94,7 @@ struct
       infants = Int32.to_int (Bson.get_int32 (Bson.get_element "infants" bs));  
       trip_type = Int32.to_int (Bson.get_int32 (Bson.get_element "trip_type" bs));  
 
-      last_checked = Bson.get_double (Bson.get_element "last_checked" bs);
+      last_fsed = Bson.get_double (Bson.get_element "last_fsed" bs);
       id = Int32.to_int (Bson.get_int32 (Bson.get_element "id" bs));    
     }
 
@@ -161,13 +161,14 @@ end
 module Price : sig
   type t =
       {
-        journey: Journey.t;
+        journey_id: int;
 	airline : string;
 	airline_http : string;
 	actual_dep_date : string;
 	actual_ret_date : string;
 	price : float;
 	last_checked : float;
+	expired : bool;
       }
 
   val to_bson : t -> Bson.t
@@ -177,38 +178,41 @@ end =
 struct
   type t =
       { 
-	journey: Journey.t;
+        journey_id: int;
 	airline : string;
 	airline_http : string;
 	actual_dep_date : string;
 	actual_ret_date : string;
 	price : float;
 	last_checked : float;
+	expired : bool;
       }
 
   let to_bson p = 
-    Bson.add_element "journey" (Bson.create_doc_element (Journey.to_bson p.journey)) 
+    Bson.add_element "journey_id" (Bson.create_int32 (Int32.of_int p.journey_id))
       (Bson.add_element "airline" (Bson.create_string p.airline) 
 	 (Bson.add_element "airline_http" (Bson.create_string p.airline_http)
 	 (Bson.add_element "actual_dep_date" (Bson.create_string p.actual_dep_date)
 	    (Bson.add_element "actual_ret_date" (Bson.create_string p.actual_ret_date)
 	       (Bson.add_element "price" (Bson.create_double p.price)
-		  (Bson.add_element "last_checked" (Bson.create_double p.last_checked) Bson.empty))))))
+		  (Bson.add_element "last_checked" (Bson.create_double p.last_checked) 
+		     (Bson.add_element "expired" (Bson.create_boolean p.expired) Bson.empty)))))))
 
   let of_bson bs = 
     { 
-      journey = Journey.of_bson (Bson.get_doc_element (Bson.get_element "journey" bs));
+      journey_id = Int32.to_int (Bson.get_int32 (Bson.get_element "journey_id" bs));
       airline = Bson.get_string (Bson.get_element "airline" bs);
       airline_http = Bson.get_string (Bson.get_element "airline_http" bs);
       actual_dep_date = Bson.get_string (Bson.get_element "actual_dep_date" bs);
       actual_ret_date = Bson.get_string (Bson.get_element "actual_ret_date" bs);
       price = Bson.get_double (Bson.get_element "price" bs);
       last_checked = Bson.get_double (Bson.get_element "last_checked" bs);
+      expired = Bson.get_boolean (Bson.get_element "expired" bs);
     }
 
   let to_string p = 
-    Printf.sprintf "Journey = [%s], %s, %s, %s, %s, %s, %s"
-    (Journey.to_string p.journey)
+    Printf.sprintf "Journey_id = [%d], %s, %s, %s, %s, %s, %s"
+    p.journey_id
     p.airline
     p.airline_http
     p.actual_dep_date

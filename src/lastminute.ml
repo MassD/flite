@@ -3,7 +3,7 @@ open Flite_type
 open Flite_type.Journey
 open Flite_type.Price
 open Flite_type.Airline
-open Flite_mongo
+open Flite_mongo_airline
 open Lwt
 open Ocsigen_http_frame
 open Http_header
@@ -62,7 +62,7 @@ let parse j html =
 	  let (ret_mo, next) = extract next ret_mo_begin value_end in
 	  let fr = 
 	    { 
-	      journey = j;
+	      journey_id = j.id;
 	      airline = String.capitalize airline;
 	      airline_http = 
 		(
@@ -80,6 +80,7 @@ let parse j html =
 	      actual_ret_date = ret_mo ^ "-" ^ ret_dy;
 	      price = float_of_string price;
 	      last_checked = Unix.time ();
+	      expired = false;
 	    } in
 	  parse_rec (next+1) (fr::acc)
 	) with Not_found -> acc
@@ -121,9 +122,14 @@ let fs_lwt j =
     (fun html -> 
       let pl = parse j html in
       let len = List.length pl in 
-      if len = 0 then lastminute_warning "cannot obtain any price for journey=%d, html=%s" j.id html
-      else lastminute_notice "obtained %d prices for journey=%d\n" len j.id;
-      Lwt.return pl)
+      if len = 0 then 
+	(lastminute_warning "cannot obtain any price for journey=%d, html=%s" j.id html;
+	 Lwt.return None)
+      else 
+	(lastminute_notice "obtained %d prices for journey=%d\n" len j.id;
+	 Lwt.return (Some pl)
+	)
+    )
     
 
 
