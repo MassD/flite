@@ -13,6 +13,7 @@
 *.native
 *.byte
 *.md~
+*.log
 .DS_Store
 .#mongo.mli
 _build/
