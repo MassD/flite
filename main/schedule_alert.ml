@@ -23,5 +23,8 @@ let rec start hour =
 	start hour
     )
 
-let _ = Lwt_main.run (start (Utils.current_hour())) 
+let _ = 
+(return (schedule_warning "ALERT_ALL scheduler is started!")) >>=
+    (fun() -> start (Utils.current_hour()))
+
 
