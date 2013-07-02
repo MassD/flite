@@ -23,3 +23,12 @@ let to_mongo j =
 	| _ -> return_unit
     )
 
+let update_last_fsed journey_id utime =
+  let q = Bson.add_element "id" (Bson.create_int32 (Utils.to_int32 journey_id)) (Bson.empty) in
+  let u = Bson.add_element "$set" 
+      (Bson.create_doc_element 
+	 (Bson.add_element "last_fsed" (Bson.create_double utime) Bson.empty)
+      )
+      Bson.empty
+  in 
+  update_mongo Journeys q u
