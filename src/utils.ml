@@ -26,7 +26,7 @@ let to_utime s =
 (* http://stackoverflow.com/questions/17188464/why-unix-tm-hour-is-the-real-hour-minus-one *)
 let string_of_utime time = 
   let gtime = Unix.localtime time in
-  Printf.sprintf "%d-%d-%d %d:%d:%d" (gtime.tm_year+1900) (gtime.tm_mon+1) (gtime.tm_mday) (gtime.tm_hour) gtime.tm_min gtime.tm_sec
+  Printf.sprintf "%d-%d-%d %d:%d" (gtime.tm_year+1900) (gtime.tm_mon+1) (gtime.tm_mday) (gtime.tm_hour) gtime.tm_min
 
 let current_hour () = let ut = Unix.localtime (Unix.time ()) in ut.tm_hour
 
