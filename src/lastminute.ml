@@ -101,7 +101,7 @@ let download_fs_html_lwt j =
   try_lwt (
     Ocsigen_http_client.get_url ~headers:(Http_headers.add Http_headers.user_agent "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36" Http_headers.empty) (build_fs_url j)) with
     | exn -> 
-      lastminute_error ~exn:exn "download journey=%d has problem, returning \"\"" j.id;
+      lastminute_error ~exn:exn "download journey=%d (%s) has problem, returning \"\"" j.id (build_fs_url j);
       return 
 	{
 	  frame_header=
