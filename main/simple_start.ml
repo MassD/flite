@@ -12,7 +12,7 @@ let rec start () =
       schedule_notice "%s" "Begin a new round";
       try_lwt (
 	(get_all_journeys ()) >>=
-	  (fun fl -> (Lwt_list.iter_p email_price_simple_lwt fl) >>= (fun() -> schedule_notice "Finished a round";return_unit))
+	  (fun fl -> (Lwt_list.iter_p fs fl) >>= (fun() -> schedule_notice "Finished a round";return_unit))
       ) with exn -> schedule_error ~exn:exn "error:%s" "in main loop";return_unit
     )
 
