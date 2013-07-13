@@ -129,8 +129,8 @@ let download_fs_html_lwt_cohttp j =
       lastminute_error ~exn:exn "download journey=%d (%s) has problem, returning \"\"" j.id (build_fs_url j);
       return None
 
-let content = content_ocsi
-let download_fs_html_lwt = download_fs_html_lwt_ocsi
+let content = content_cohttp
+let download_fs_html_lwt = download_fs_html_lwt_cohttp
 
 let get_fs_html_lwt j =
   (download_fs_html_lwt j) >>= (fun response_body -> lastminute_notice "finished download journey=%d" j.id;content response_body)

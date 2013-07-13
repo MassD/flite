@@ -13,5 +13,5 @@ let get_all_airlines () =
     let exists = Bson.add_element "$exists" (Bson.create_boolean true) Bson.empty in
     Bson.add_element "name" (Bson.create_doc_element exists) (Bson.empty)
   in 
-  Printf.printf "airlines q json: %s\n" (Bson.to_simple_json q);
+  (*Printf.printf "airlines q json: %s\n" (Bson.to_simple_json q);*)
   from_mongo_all Airlines q Airline.of_bson
