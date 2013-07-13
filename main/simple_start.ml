@@ -9,10 +9,10 @@ let frequency = 1.
 let rec start () = 
   (Lwt_unix.sleep frequency)  >>= 
     (fun () -> 
-      schedule_notice "%s" "Begin a new round";
+      schedule_warning "%s" "Begin a new round";
       try_lwt (
 	(get_all_journeys ()) >>=
-	  (fun fl -> (Lwt_list.iter_p fs fl) >>= (fun() -> schedule_notice "Finished a round";return_unit))
+	  (fun fl -> Printf.printf "%d journeys" (List.length fl);(Lwt_list.iter_p fs fl) >>= (fun() -> schedule_warning "Finished a round";return_unit))
       ) with exn -> schedule_error ~exn:exn "error:%s" "in main loop";return_unit
     )
 

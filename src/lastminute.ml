@@ -8,6 +8,7 @@ open Lwt
 open Ocsigen_http_frame
 open Http_header
 open Logging
+open Cohttp_lwt
 
 let airline_tbl =
   let al = Lwt_main.run ((get_all_airlines ()) >>= (fun al -> return al)) in
@@ -91,13 +92,13 @@ let parse j html =
 
 let fs_flex j = parse j (get_fs_html j)
 
-let content = function
+let content_ocsi = function
   | { Ocsigen_http_frame.frame_content = Some v } ->
       Ocsigen_stream.string_of_stream 1073741823 (Ocsigen_stream.get v)
   | _ -> return ""
 
-let download_fs_html_lwt j = 
-  lastminute_notice "begin download, journey=%d" j.id;
+let download_fs_html_lwt_ocsi j = 
+  lastminute_warning "begin download, journey=%d" j.id;
   try_lwt (
     Ocsigen_http_client.get_url ~headers:(Http_headers.add Http_headers.user_agent "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36" Http_headers.empty) (build_fs_url j)) with
     | exn -> 
@@ -113,6 +114,23 @@ let download_fs_html_lwt j =
 	  frame_content=None;
 	  frame_abort=(fun () -> return_unit)
 	}
+
+
+let content_cohttp = function
+  | Some (_, body) ->  Cohttp_lwt_body.string_of_body body
+  | _ -> return ""
+
+let download_fs_html_lwt_cohttp j = 
+  lastminute_notice "begin download, journey=%d" j.id;
+  try_lwt (
+    Cohttp_lwt_unix.Client.get (Uri.of_string (build_fs_url j))
+    (*Ocsigen_http_client.get_url ~headers:(Http_headers.add Http_headers.user_agent "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1468.0 Safari/537.36" Http_headers.empty) (build_fs_url j)*))  with
+    | exn -> 
+      lastminute_error ~exn:exn "download journey=%d (%s) has problem, returning \"\"" j.id (build_fs_url j);
+      return None
+
+let content = content_ocsi
+let download_fs_html_lwt = download_fs_html_lwt_ocsi
 
 let get_fs_html_lwt j =
   (download_fs_html_lwt j) >>= (fun response_body -> lastminute_notice "finished download journey=%d" j.id;content response_body)

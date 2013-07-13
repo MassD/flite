@@ -1,3 +1,6 @@
+open Lwt
+open Cohttp_lwt
+
 let u1 = "http://www.lastminute.com"
 
 let u2 = "http://www.bbc.co.uk"
