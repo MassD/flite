@@ -16,7 +16,7 @@ let send (user,user_email,subj,html) =
   try (
     Netsendmail.sendmail ~mailer:"/usr/sbin/sendmail" 
       (Netsendmail.wrap_mail
-	 ~from_addr:("FLY.io", "no-reply@massd.me")
+	 ~from_addr:("FlyFly.io", "no-reply@massd.me")
 	 ~to_addrs:[(user, user_email)]
 	 ~out_charset:`Enc_utf8
 	 ~subject:subj
